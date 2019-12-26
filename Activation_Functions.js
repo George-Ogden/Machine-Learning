@@ -1,29 +1,18 @@
+class activation_function{
+    constructor(func,derivative){
+        this.activate = func;
+        this.derivative = derivative;
+    }
+}
 //sigmoid
-sigmoid = x => 1/(1+Math.exp(-x));
-dsigmoid = x => x*(1-x);
+let sigmoid = new activation_function(x => 1/(1+Math.exp(-x)), x => x*(1-x));
 //tanh
-tanh = x => Math.tanh(x);
-dtanh = x => 1-x*x;
+let tanh = new activation_function(x => Math.tanh(x), x => 1-x*x);
 //ReLU
-ReLU = x => (x > 0) ? x:0;
-dReLU = x => (x > 0) ? 1:0;
+let ReLU = new activation_function(x => (x > 0) ? x:0, x => (x > 0) ? 1:0);
 //leaky ReLU
-lReLU = x => (x > 0) ? x:0.1*x;
-dlReLU = x => (x > 0) ? 1:0.1;
+let lReLU = new activation_function(x => (x > 0) ? x:0.1*x, x => (x > 0) ? 1:0.1);
 //SoftPlus
-SoftPlus = x => Math.log(1+Math.exp(x));
-dSoftPlus = x => 1-1/Math.exp(x);
+let SoftPlus = new activation_function(x => Math.log(1+Math.exp(x)), x => 1-1/Math.exp(x));
 //swish
-swish = x => x/(1+Math.exp(-x));
-dswish = x => x+x*(1-x)/(gsl_sf_lambert_W0(x*Math.exp(-x))+x);
-
-console.log(sigmoid(7));
-console.log(dsigmoid(sigmoid(7)));
-console.log(tanh(7));
-console.log(dtanh(0.8));
-console.log(ReLU(7));
-console.log(dReLU(0.8));
-console.log(SoftPlus(7));
-console.log(dSoftPlus(0.8));
-console.log(swish(7));
-console.log(dswish(0.8));
+let swish = new activation_function(x => x/(1+Math.exp(-x)), x => x+x*(1-x)/(gsl_sf_lambert_W0(x*Math.exp(-x))+x));
