@@ -82,7 +82,7 @@ let training_set = [
     [[0,1] , [1]],
     [[1,0] , [1]],
     [[1,1] , [0]],
-]
+]/*
 for (let i = 0; i < training_set.length; i++){
     console.log(network.feedforward(training_set[i][0]));
 }
@@ -91,4 +91,4 @@ while (network.cost(training_set) > 0.01){
 }
 for (let i = 0; i < training_set.length; i++){
     console.log(network.feedforward(training_set[i][0]));
-}
+}*/
