@@ -46,7 +46,7 @@ class Matrix{
 
     map(func,matrix=null){
         if (matrix){
-            //create a new matrix that will be returned
+            //initialise new matrix
         let new_matrix = new Matrix(this.rows, this.cols);
         //loop through rows and columns
         for (let i = 0; i < this.rows; i++){
@@ -67,7 +67,15 @@ class Matrix{
         }
     }
 
-
+    static map(matrix,func){
+        //initialise new matrix
+        let new_matrix = Matrix.fromArray(matrix.data);
+        //apply function
+        new_matrix.map(func);
+        //return new matrix
+        return new_matrix
+    }
+    
     randomise(){
         //apply a random function from 0-1 to each element
         this.map(Math.random);
@@ -133,26 +141,31 @@ static multiply(matrix,n){
 }
 
 static dot(matrix1,matrix2){
+    if (matrix1.cols = matrix2.rows){
     //initialise new matrix with columns of this and rows of that
-    let new_matrix = new Matrix(matrix1.cols,matrix2.rows);
+    let new_matrix = new Matrix(matrix1.rows,matrix2.cols);
     //loop through rows and columns
     for (let i = 0; i < new_matrix.rows; i++){
         for (let j = 0; j < new_matrix.cols; j++){
             //initialise with no value
             let value = 0;
-            for (let k = 0; k < matrix1.rows; k++){
+            for (let k = 0; k < matrix1.cols; k++){
                 //add on the sum of each row-column product
-                value += matrix1.data[k][i] * matrix2.data[j][k];
+                value += matrix1.data[i][k] * matrix2.data[k][j];
             }
             new_matrix.data[i][j] = value;
         }
     }
     return new_matrix;
+    } else {
+        matrix1.show()
+        matrix2.show();
+    }
 }
 
 dot(matrix){
     //use static method
-    this.set(Matrix.dot(this,matrix))
+    this.set(Matrix.dot(this,matrix));
 }
 
 rss(){
@@ -215,5 +228,9 @@ subsection(x,y,rows,cols){
     }
     //return new matrix
     return new_matrix;
+}
+
+copy(){
+    return Matrix.fromArray(this.data);
 }
 }

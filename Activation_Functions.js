@@ -1,6 +1,6 @@
 class activation_function{
     constructor(func,derivative){
-        this.activate = func;
+        this.function = func;
         this.derivative = derivative;
     }
 }
