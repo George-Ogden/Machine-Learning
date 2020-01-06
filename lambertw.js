@@ -58,7 +58,7 @@ function series_eval(r) {
   const t_1 = c[1] + r * (c[2] + r * (c[3] + r * (c[4] + r * t_5)));
   return c[0] + r * t_1;
 }
-/*-*-*-*-*-*-*-*-*-*-*-* Functions with error Codes *-*-*-*-*-*-*-*-*-*-*-*/
+//Functions with error Codes
 function lambert_W0_e(x) {
   const one_over_E = 1.0 / Math.E;
   const q = x + one_over_E;

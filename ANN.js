@@ -5,19 +5,19 @@ class Neural_Network {
     layer_thickness,
     outputs,
     activation_function,
-  ) {
+  ){
     //initialise variables
     this.length = hidden_layers + 2;
     this.width = layer_thickness;
     //creates weights and biases matrices
     this.weights = [];
-    for (let i = 0; i < this.length; i++) {
+    for (let i = 0; i < this.length; i++){
       this.weights.push(new Matrix(this.width, this.width));
     }
     this.weights[0] = new Matrix(inputs, this.width);
     this.weights[this.length - 1] = new Matrix(this.width, outputs);
     this.biases = [];
-    for (let i = 0; i < this.length; i++) {
+    for (let i = 0; i < this.length; i++){
       this.biases.push(new Matrix(1, this.width));
     }
     this.biases[this.length - 1] = new Matrix(1, outputs);
@@ -27,18 +27,18 @@ class Neural_Network {
     //add learning rate
     this.learning_rate = 0.1;
   }
-  show() {
+  show(){
     //display weights and biases
-    for (let i = 0; i < this.length; i++) {
+    for (let i = 0; i < this.length; i++){
       this.weights[i].show();
       this.biases[i].show();
     }
   }
-  feedforward(inputs) {
+  feedforward(inputs){
     let output = Matrix.fromArray([inputs]);
     this.process = [output.copy()];
     //set first output as input
-    for (let i = 0; i < this.length; i++) {
+    for (let i = 0; i < this.length; i++){
       //multiply by weights
       output.dot(this.weights[i]);
       //add biases
@@ -50,8 +50,8 @@ class Neural_Network {
     }
     return output.data[0];
   }
-  train(training_data, n = 1) {
-    for (let i = 0; i < n; i++) {
+  train(training_data, n = 1){
+    for (let i = 0; i < n; i++){
       //select random input
       let r = Math.floor(Math.random() * training_data.length);
       //calculate error
@@ -60,7 +60,7 @@ class Neural_Network {
         Matrix.fromArray([this.feedforward(training_data[r][0])]),
       );
       //loop backwards through rows
-      for (let j = this.length - 1; j >= 0; j--) {
+      for (let j = this.length - 1; j >= 0; j--){
         //calculate the gradients
         let gradient = Matrix.map(
           this.process[j + 1],
@@ -78,10 +78,10 @@ class Neural_Network {
       }
     }
   }
-  cost(training_data) {
+  cost(training_data){
     //starte with no cost
     let value = 0;
-    for (let i = 0; i < training_data.length; i++) {
+    for (let i = 0; i < training_data.length; i++){
       //find errors squared
       value += Matrix.subtract(
         Matrix.fromArray([training_data[i][1]]),
@@ -91,7 +91,7 @@ class Neural_Network {
     //return average
     return value / training_data.length;
   }
-  static from_string(dict) {
+  static from_string(dict){
     let network = new Neural_Network(
       dict.weights[0].rows,
       dict.length - 2,
@@ -102,7 +102,7 @@ class Neural_Network {
     network.process = dict.process;
     network.weights = dict.weights;
     network.biases = dict.biases;
-    for (let i = 0; i < network.length; i++) {
+    for (let i = 0; i < network.length; i++){
       network.weights[i] = Matrix.fromArray(network.weights[i].data);
       network.biases[i] = Matrix.fromArray(network.biases[i].data);
     }
@@ -125,4 +125,4 @@ while (network.cost(training_set) > 0.01){
 }
 for (let i = 0; i < training_set.length; i++){
     console.log(network.feedforward(training_set[i][0]));
-}*/
+}
