@@ -4,6 +4,8 @@ class activation_function{
         this.derivative = derivative;
     }
 }
+//identiy
+let identity = new activation_function(x => x, x => 1);
 //sigmoid
 let sigmoid = new activation_function(x => 1/(1+Math.exp(-x)), x => x*(1-x));
 //tanh
@@ -17,4 +19,4 @@ let SoftPlus = new activation_function(x => Math.log(1+Math.exp(x)), x => 1-1/Ma
 //swish
 let swish = new activation_function(x => x/(1+Math.exp(-x)), x => x+x*(1-x)/(lambert_W0(x*Math.exp(-x))+x));
 
-activation_functions = {"sigmoid":sigmoid,"tanh":tanh,"ReLU":ReLU,"lReLU":lReLU,"SoftPlus":SoftPlus,"swish":swish};
+activation_functions = {"sigmoid":sigmoid,"tanh":tanh,"ReLU":ReLU,"lReLU":lReLU,"SoftPlus":SoftPlus,"swish":swish,"identity":identity};

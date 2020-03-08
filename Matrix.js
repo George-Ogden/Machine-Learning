@@ -77,9 +77,9 @@ class Matrix {
       this.map(Math.random);
     }
   
-    reset(){
+    reset(n=0){
       //apply a random function from 0-1 to each element
-      this.map(x => 0);
+      this.map(x => n);
     }
   
     transpose(){
@@ -133,7 +133,9 @@ class Matrix {
   
     static multiply(matrix, n){
       //use non-static method
-      return Matrix.fromArray(matrix.data).multiply(n);
+      let new_matrix = Matrix.fromArray(matrix.data)
+      new_matrix.multiply(n)
+      return new_matrix
     }
   
     static dot(matrix1, matrix2){
@@ -153,10 +155,7 @@ class Matrix {
           }
         }
         return new_matrix;
-      } else {
-        matrix1.show();
-        matrix2.show();
-      }
+      } 
     }
   
     dot(matrix){
@@ -179,7 +178,7 @@ class Matrix {
   
     sum(){
       //calculate sum of elements
-      return this.data.reduce((x, y) => x[0] + y.reduce((x, y) => x + y));
+      return this.data.reduce((x, y) => x + y.reduce((x, y) => x + y),0);
   
       //initialise with no value
       let value;
@@ -187,7 +186,7 @@ class Matrix {
       for (let i = 0; i < this.rows; i++){
         for (let j = 0; j < this.cols; j++){
           //add each element
-          value += data[i][j];
+          value += this.data[i][j];
         }
       }
       //return value
@@ -213,21 +212,80 @@ class Matrix {
       this.set(Matrix.flatten(this));
     }
   
-    subsection(x, y, rows, cols){
+    subsection(x, y, w, h){
       //initialise new matrix
-      let new_matrix = new Matrix(rows, cols);
+      let new_matrix = new Matrix(h, w);
       //loop through rows and columns
-      for (let i = x; i < x + rows; i++){
-        for (let j = y; j < y + cols; j++){
-          new_matrix.data[i - x][j - y] = this.data[i][j];
+      for (let i = y; i < y + h; i++){
+        for (let j = x; j < x + w; j++){
+          //flatten
+          new_matrix.data[i - y][j - x] = this.data[i][j];
         }
       }
       //return new matrix
       return new_matrix;
     }
+
+    static build(matrix, rows, cols){
+      //initialise new matrix
+      let new_matrix = new Matrix(rows, cols);
+      //loop through rows and columns
+      for (let i = 0; i < rows; i++){
+        for (let j = 0; j < cols; j++){
+          //rebuild
+          new_matrix.data[i][j] = matrix.data[0][i * cols + j];
+        }
+      }
+      //return new matrix
+      return new_matrix;
+    }
+
+    build(rows, cols){
+	    //use static method
+	    this.set(Matrix.build(this, rows, cols));
+    }
   
     copy(){
       return Matrix.fromArray(this.data);
     }
+
+    static pad(matrix,rows=1,cols=1){
+      //create new, blank, expanded matrix
+      let new_matrix = new Matrix(matrix.rows + 2*rows, matrix.cols + 2*cols)
+      new_matrix.reset();
+      //loop through rows and columns
+      for (let i = 0; i < matrix.rows; i ++){
+        for (let j = 0; j < matrix.cols;  j++){
+          //insert data
+          new_matrix.data[i+rows][j+cols] = matrix.data[i][j]
+        }
+      }
+      //return new matrix
+      return new_matrix
+    }
+    
+    pad(rows=1,cols=1){
+      //use static method
+      this.set(Matrix.pad(this,rows,cols))
+    }
+    
+    static flip(matrix){
+      //create new matrix with same directions
+      let new_matrix = new Matrix(matrix.rows, matrix.cols);
+      //loop through rows and columns
+      for (let i = 0; i < matrix.rows; i ++){
+        for (let j = 0; j < matrix.cols;  j++){
+          //flip data
+          new_matrix.data[i][j] = matrix.data[matrix.rows-i-1][matrix.cols-j-1]
+        }
+      }
+      //return new matrix
+      return new_matrix
+    }
+
+    flip(){
+      this.set(Matrix.flip(this));
+    }
   }
-  
+
+  let x = new Matrix(3,4)
