@@ -164,61 +164,23 @@ class Matrix {
     }
   
     rss(){
-      //initialise with no value
-      let value = 0;
-      for (let i = 0; i < this.rows; i++){
-        for (let j = 0; j < this.cols; j++){
-          //add each element squared
-          value += this.data[i][j] * this.data[i][j];
-        }
-      }
-      //return value
-      return value;
+		//return each element squared
+		return this.data.reduce((x, y) => x + y.reduce((x, y) => x + y*y, 0), 0);
     }
   
     sum(){
       //calculate sum of elements
       return this.data.reduce((x, y) => x + y.reduce((x, y) => x + y),0);
   
-      //initialise with no value
-      let value;
-  
-      for (let i = 0; i < this.rows; i++){
-        for (let j = 0; j < this.cols; j++){
-          //add each element
-          value += this.data[i][j];
-        }
-      }
-      //return value
-      return value;
     }
-  
-    static flatten(matrix){
-      //initialise new matrix
-      let new_matrix = new Matrix(1, matrix.rows * matrix.cols);
-      //loop through rows and columns
-      for (let i = 0; i < matrix.rows; i++){
-        for (let j = 0; j < matrix.cols; j++){
-          //insert each element into the new array
-          new_matrix.data[0][i * matrix.cols + j] = matrix.data[i][j];
-        }
-      }
-      //return new matrix
-      return new_matrix;
-    }
-  
-    flatten(){
-      //use static method
-      this.set(Matrix.flatten(this));
-    }
-  
+    
     subsection(x, y, w, h){
       //initialise new matrix
       let new_matrix = new Matrix(h, w);
       //loop through rows and columns
       for (let i = y; i < y + h; i++){
         for (let j = x; j < x + w; j++){
-          //flatten
+          //add data
           new_matrix.data[i - y][j - x] = this.data[i][j];
         }
       }
@@ -226,25 +188,7 @@ class Matrix {
       return new_matrix;
     }
 
-    static build(matrix, rows, cols){
-      //initialise new matrix
-      let new_matrix = new Matrix(rows, cols);
-      //loop through rows and columns
-      for (let i = 0; i < rows; i++){
-        for (let j = 0; j < cols; j++){
-          //rebuild
-          new_matrix.data[i][j] = matrix.data[0][i * cols + j];
-        }
-      }
-      //return new matrix
-      return new_matrix;
-    }
-
-    build(rows, cols){
-	    //use static method
-	    this.set(Matrix.build(this, rows, cols));
-    }
-  
+      
     copy(){
       return Matrix.fromArray(this.data);
     }
@@ -284,8 +228,54 @@ class Matrix {
     }
 
     flip(){
-      this.set(Matrix.flip(this));
+		//use static method
+      	this.set(Matrix.flip(this));
     }
+
+	max(){
+		//keep only max value
+		return this.data.reduce((x,y) => Math.max(x,y.reduce((x,y) => Math.max(x,y))),-Infinity);
+	}
+
+	max_plot(){
+		//define null plot
+		let plot = new Matrix(this.rows, this.cols);
+		plot.reset()
+		//find max
+		let max = this.max();
+		let n = 0;
+		for (let i = 0; i < plot.rows; i ++){
+			for (let j = 0; j < plot.cols;  j++){
+				//check if plot needs a value
+				if (this.data[i][j] == max){
+					n++;
+					plot.data[i][j] = 1;
+				}
+			}
+      	}
+		//scale
+		plot.multiply(1/n);
+		return plot
+	}
+
+  static insert(matrix1,matrix2,x,y){
+    //define new matrix
+    let new_matrix = matrix1.copy()
+    //loop through rows and columns
+    for (let i = 0; i < matrix2.rows; i++){
+      for (let j = 0; j < matrix2.cols; j++){
+        //insert the data
+        new_matrix.data[i+y][j+x] = matrix2.data[i][j]
+      }
+    }
+    //return new matrix
+    return new_matrix
   }
+
+  insert(matrix, x, y){
+    //use static method
+    this.set(Matrix.insert(this,matrix,x,y))
+  }
+}
 
   let x = new Matrix(3,4)

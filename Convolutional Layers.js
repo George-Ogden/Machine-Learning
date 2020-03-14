@@ -1,6 +1,6 @@
 class Convoluting extends Neural_Network {
-    constructor(kernel_width,kernel_height,kernels){
-        super("swish",0.01)
+    constructor(kernel_width,kernel_height,kernels,activation_function="swish"){
+        super("Convoluting",activation_function,0.001)
         //sizes
         this.length = kernels
         this.width = kernel_width
@@ -45,7 +45,7 @@ class Convoluting extends Neural_Network {
         this.process = []
         //loop through kernels
         for (let i = 0; i < this.colours; i++){
-            output.push(Matrix.fromArray(pixel_data[i]))
+            output.push(pixel_data[i] instanceof Matrix ? pixel_data[i] : Matrix.fromArray(pixel_data[i]))
             //add to process
             this.process.push([])
             for (let j = 0; j < this.length; j++){
@@ -59,37 +59,72 @@ class Convoluting extends Neural_Network {
         return output
     }
     train(error){
-        //find activation function derivative
-        for (let i = 0; i < error.length; i++){
-            error[i].map(this.activation_function.derivative)
-        }
+        //loop through colours
         for (let i = 0; i < this.colours; i++){
+			//find derivative
+            error[i].map(this.activation_function.derivative)
+			//loop through layers
             for (let j = this.length - 1; j >= 0; j--){
+				//find gradient using convolution
                 let gradient = Convoluting.convolution(this.process[i][j],error[i])
+				//multiply by learning rate
                 gradient.multiply(this.learning_rate)
+				//find the previous error through full convolution
                 error[i] = Convoluting.full_convolution(error[i],this.kernels[i][j])
+				//add gradient
                 this.kernels[i][j].add(gradient)
             }
         }
         return error
     }
+
+	show(){
+		for (let i = 0; i < this.colours; i++){
+            for (let j = 0; j < this.length; j++){
+                //insert kernel into array
+                this.kernels[i][j].show()
+            }
+        } 
+	}
+
+    static from_string(dict){
+      //create new network
+      let network = new Convoluting(dict.width, 
+	  dict.height, 
+	  dict.length,
+	  dict.activation_function_name)
+      //set variables
+	  network.colours = dict.colours
+	  network.learning_rate = dict.learning_rate
+	  //add kernels
+	  for (let i = 0; i < this.colours; i++){
+            for (let j = 0; j < this.length; j++){
+       			network.kernels[i][j] = Matrix.fromArray(network.kernels[i][j].data);
+			}
+      }
+      return network;
+    }
+    
+    copy(){
+      //create neural network from string of self
+      return Convoluting.from_string(this)
+    }
 }
 
-let network = new Convoluting(3,5,2)
+let network = new Convoluting(3, 5,2)
+console.log(network.copy())
 let inputs = [new Matrix(20,20).data,new Matrix(20,20).data,new Matrix(20,20).data]
 let target = [new Matrix(12,16),new Matrix(12,16),new Matrix(12,16)]
 for (let i = 0; i < 3; i++){
     target[i].reset(0.5);
 }
-console.log(network.feedforward(inputs))
-/*
-for (let i = 0; i < 100; i ++){
+console.log(network.feedForward(inputs))
+for (let i = 0; i < 1000; i ++){
     let output = network.feedForward(inputs)
     let error = []
     for (let j = 0; j < 3; j ++){
-        //console.log(target[j],output[j],i)
         error[j] = Matrix.subtract(target[j],output[j])
     }
-    console.log(output)
     network.train(error)
-}*/
+}
+console.log(network.feedForward(inputs))

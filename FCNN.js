@@ -8,7 +8,7 @@ class Fully_Connected_Network extends Neural_Network{
       learning_rate = 0.1
       ){
           //superclass constructor
-        super(activation_function, learning_rate)
+        super("Fully_Connected_Network",activation_function, learning_rate)
       //initialise variables
       this.length = hidden_layers + 2;
       this.width = layer_thickness;
@@ -33,7 +33,7 @@ class Fully_Connected_Network extends Neural_Network{
       }
     }
     feedforward(inputs){
-      let output = Matrix.fromArray([inputs]);
+      let output = inputs instanceof Matrix ? inputs : Matrix.fromArray(inputs)
       this.process = [output.copy()];
       //set first output as input
       for (let i = 0; i < this.length; i++){
@@ -91,6 +91,7 @@ class Fully_Connected_Network extends Neural_Network{
         dict.weights[0].cols,
         dict.weights[dict.weights.length - 1].cols,
         dict.activation_function_name,
+	  	dict.learning_rate
       );
       //set variables
       network.process = dict.process;
