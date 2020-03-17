@@ -7,7 +7,7 @@ class Max_Pooling extends Neural_Network{
 		this.dy = dy
 		this.colours = 3
     }
-	feedForward(pixel_data){
+	forward_propagate(pixel_data){
         //create output
         let output = []
 		//define process
@@ -34,7 +34,7 @@ class Max_Pooling extends Neural_Network{
 		}
 		return output
 	}
-	train(error){
+	backward_propagate(error){
 		//loop through colours
         for (let i = 0; i < this.colours; i++){
 			//define gradient
@@ -74,7 +74,7 @@ class Average_Pooling extends Neural_Network{
 		this.dy = dy
 		this.colours = 3
     }
-	feedForward(pixel_data){
+	forward_propagate(pixel_data){
         //create output
         let output = []
         //loop through layers
@@ -97,7 +97,7 @@ class Average_Pooling extends Neural_Network{
 		}
 		return output
 	}
-	train(error){
+	backward_propagate(error){
 		//loop through colours
         for (let i = 0; i < this.colours; i++){
 			//define gradient

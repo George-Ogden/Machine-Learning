@@ -10,21 +10,21 @@ class Neural_Network {
   }
   show(){
   }
-  feedforward(){
+  forward_propagate(){
   }
-  train(){
+  backward_propagate(){
   }
-  cost(training_data){
+  cost(test_data){
     //starte with no cost
     let value = 0;
-    for (let i = 0; i < training_data.length; i++){
+    for (let i = 0; i < test_data.length; i++){
       //find errors squared
       value += Matrix.subtract(
-        Matrix.fromArray([training_data[i][1]]),
-        Matrix.fromArray([this.feedforward(training_data[i][0])]),
+        Matrix.fromArray([test_data[i][1]]),
+        Matrix.fromArray([this.forward_propagate(test_data[i][0])]),
       ).rss();
     }
     //return average
-    return value / training_data.length;
+    return value / test_data.length;
   }
 }

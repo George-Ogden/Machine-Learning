@@ -5,7 +5,7 @@ class Flatten extends Neural_Network{
 		this.y = y;
 		this.colours = 3
     }
-	feedForward(pixel_data){
+	forward_propagate(pixel_data){
 		console.log(pixel_data)
         //create output
         let output = new Matrix(1,this.x*this.y*this.colours)
@@ -19,7 +19,7 @@ class Flatten extends Neural_Network{
 		}
 		return output
 	}
-	train(error){
+	backward_propagate(error){
 		//define gradient
 		let gradient = []
 		//loop through colours
@@ -44,4 +44,3 @@ class Flatten extends Neural_Network{
 		return Flatten.fromString(this);
 	}
 }
-let network = new Flatten(10,10)

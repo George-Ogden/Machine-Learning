@@ -38,7 +38,7 @@ class Convoluting extends Neural_Network {
         return Convoluting.convolution(layer,kernel)
     }
 
-    feedForward(pixel_data){
+    forward_propagate(pixel_data){
         //create output
         let output = []
         //initialise process
@@ -58,7 +58,7 @@ class Convoluting extends Neural_Network {
         }
         return output
     }
-    train(error){
+    backward_propagate(error){
         //loop through colours
         for (let i = 0; i < this.colours; i++){
 			//find derivative
@@ -110,21 +110,3 @@ class Convoluting extends Neural_Network {
       return Convoluting.from_string(this)
     }
 }
-
-let network = new Convoluting(3, 5,2)
-console.log(network.copy())
-let inputs = [new Matrix(20,20).data,new Matrix(20,20).data,new Matrix(20,20).data]
-let target = [new Matrix(12,16),new Matrix(12,16),new Matrix(12,16)]
-for (let i = 0; i < 3; i++){
-    target[i].reset(0.5);
-}
-console.log(network.feedForward(inputs))
-for (let i = 0; i < 1000; i ++){
-    let output = network.feedForward(inputs)
-    let error = []
-    for (let j = 0; j < 3; j ++){
-        error[j] = Matrix.subtract(target[j],output[j])
-    }
-    network.train(error)
-}
-console.log(network.feedForward(inputs))
