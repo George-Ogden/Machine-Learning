@@ -1,11 +1,11 @@
 class Max_Pooling extends Neural_Network{
-    constructor(x,y,dx,dy){
-        super("Max_Pooling","identity",1)
+    constructor(x,y,dx,dy,colours=3){
+        super(Max_Pooling,"identity",1)
 		this.x = x;
 		this.y = y;
 		this.dx = dx
 		this.dy = dy
-		this.colours = 3
+		this.colours = colours
     }
 	forward_propagate(pixel_data){
         //create output
@@ -56,18 +56,18 @@ class Max_Pooling extends Neural_Network{
         }
         return error
     }
-	static fromString(dict){
+	static from_string(dict){
 		//create new network
 		let network = new Max_Pooling(this.x,this.y,this.dx,this.dy)
 		return network
 	}
 	copy(){
-		return Max_Pooling.fromString(this);
+		return Max_Pooling.from_string(eval(JSON.stringify(this)));
 	}
 }
 class Average_Pooling extends Neural_Network{
     constructor(x,y,dx,dy){
-        super("Average_Pooling","identity",1)
+        super(Average_Pooling,"identity",1)
 		this.x = x;
 		this.y = y;
 		this.dx = dx
@@ -123,12 +123,12 @@ class Average_Pooling extends Neural_Network{
         }
         return error
     }
-	static fromString(dict){
+	static from_string(dict){
 		//create new network
 		let network = new Average_Pooling(this.x,this.y,this.dx,this.dy)
 		return network
 	}
 	copy(){
-		return Average_Pooling.fromString(this);
+		return Average_Pooling.from_string(eval(JSON.stringify(this)));
 	}
 }

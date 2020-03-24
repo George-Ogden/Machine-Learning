@@ -9,7 +9,8 @@ class Combined_Network {
 	forward_propagate(input){
 		this.process = [input]
 		for (let i = 0; i < this.length; i++){
-			this.process.push(this.networks[i].forward_propagate(this.process[i],true))
+			let output = this.networks[i].forward_propagate(this.process[i])
+			this.process.push(output instanceof Matrix ? output : output[0] instanceof Matrix ? output.map(x => x.copy()) : Matrix.fromArray([output]))
 		}
 		return this.process[this.length]
 	  }
@@ -29,20 +30,18 @@ class Combined_Network {
         }
 		for (let j = this.length-1; j >= 0; j--){
       error = this.networks[j].backward_propagate(error,true)
-      console.log(error.toArray()[0])
 		}
 	}
 	}
 	static from_string(dict){
-		console.log(dict)
 		let networks = []
 		for (let i = 0; i < dict.length; i++){
-			networks.push(eval(dict[i].type).from_string(dict[i]))
+			networks.push(dict[i].type.from_string(dict[i]))
 		}
 		return new Combined_Network(networks)
 	}
 	copy(){
-		return Combined_Network.from_string(this.networks)
+		return Combined_Network.from_string(eval(JSON.stringify(this.networks)))
 	}
 	cost(test_data){
     //starte with no cost

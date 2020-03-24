@@ -2,7 +2,7 @@ class Neural_Network {
   constructor(type,activation_function,learning_rate=0.1
   ){
     //add activation function
-	this.type = type
+	  this.type = type
     this.activation_function_name = activation_function;
     this.activation_function = activation_functions[activation_function];
     //add learning rate

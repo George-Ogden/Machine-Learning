@@ -8,7 +8,7 @@ class Fully_Connected_Network extends Neural_Network{
       learning_rate = 0.1
       ){
           //superclass constructor
-        super("Fully_Connected_Network",activation_function, learning_rate)
+        super(Fully_Connected_Network,activation_function, learning_rate)
       //initialise variables
       this.length = hidden_layers + 2;
       this.width = layer_thickness;
@@ -105,11 +105,11 @@ class Fully_Connected_Network extends Neural_Network{
     
     copy(){
       //create neural network from string of self
-      return Fully_Connected_Network.from_string(this)
+      return Fully_Connected_Network.from_string(eval(JSON.stringify(this)))
     }
 }
     /*
-    let network = new Fully_Connected_Network(2,2,3,1,"sigmoid",.001);
+    let network = new Fully_Connected_Network(2,2,3,1,"sigmoid",.01);
     let training_set = [
       [[0,0] , [0]],
       [[0,1] , [1]],
@@ -119,9 +119,11 @@ class Fully_Connected_Network extends Neural_Network{
   for (let i = 0; i < training_set.length; i++){
       console.log(network.forward_propagate(training_set[i][0]));
   }
-  while (network.cost(training_set) > 0.1){
-      network.backward_propagate(training_set,1000)
+  let date = new Date();
+  while (network.cost(training_set) > 0.01){
+    network.backward_propagate(training_set,1000)
   }
+  console.log(date.getTime()-new Date().getTime())
   for (let i = 0; i < training_set.length; i++){
-      console.log(network.forward_propagate(training_set[i][0]));
+  console.log(network.forward_propagate(training_set[i][0]));
   }*/

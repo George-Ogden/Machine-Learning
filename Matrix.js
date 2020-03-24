@@ -65,7 +65,7 @@ class Matrix {
   
     static map(matrix, func){
       //initialise new matrix
-      let new_matrix = Matrix.fromArray(matrix.data);
+      let new_matrix = matrix.copy()
       //apply function
       new_matrix.map(func);
       //return new matrix
@@ -133,7 +133,7 @@ class Matrix {
   
     static multiply(matrix, n){
       //use non-static method
-      let new_matrix = Matrix.fromArray(matrix.data)
+      let new_matrix = matrix.copy()
       new_matrix.multiply(n)
       return new_matrix
     }
@@ -190,7 +190,7 @@ class Matrix {
 
       
     copy(){
-      return Matrix.fromArray(this.data);
+      return Matrix.fromArray(eval(JSON.stringify(this.data)));
     }
 
     static pad(matrix,rows=1,cols=1){

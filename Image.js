@@ -1,6 +1,176 @@
+class Image_{
+    constructor(label,type){
+        //add label
+        this.label = label;
+        //add type
+        this.type = type;
+    }
+    
+    show(){
+        //add to document
+        document.body.appendChild(this.canvas);
+    }
 
-class Image_from_src {
-    constructor(src=""){
+    hide(){
+        //remove from document
+        document.body.removeChild(this.canvas);
+    }
+}
+
+class Image_colour extends Image_{
+    constructor(label,type){
+        //use super constructor
+        super(label,type)
+    }
+
+    shrink(width,height){
+        //find offset
+        let x = 0
+        let y = 0
+        let sf = width/this.width
+        if (width/height > this.width/this.height){
+            sf =  height/this.height
+            //crop x
+            x = Math.round((width-this.width*sf)/2)
+        } else if (width/height < this.width/this.height){
+            //crop y
+            y = Math.round((height-this.height*sf)/2)
+        }
+        
+        //redraw smaller image
+        this.context.drawImage(this.canvas, x, y, this.width*sf, this.height*sf);
+
+        //find width and height
+        this.width = width
+        this.height = height
+
+        //redefine data
+        this.red = new Matrix(this.height,this.width)
+        this.green = new Matrix(this.height,this.width)
+        this.blue = new Matrix(this.height,this.width)
+        this.data = this.context.getImageData(0,0,this.width,this.height)
+        for (let i = 0; i < this.width; i++) {
+            for (let j = 0; j < this.height; j++){
+                this.red.data[i][j] = this.data.data[4*(i*this.height+j)]
+                this.green.data[i][j] = this.data.data[4*(i*this.height+j)+1]
+                this.blue.data[i][j] = this.data.data[4*(i*this.height+j)+2]
+            }
+        }
+        //update canvas
+        this.canvas.width = this.width
+        this.canvas.height = this.height
+        this.context.putImageData(this.data,0,0)
+    }    
+
+    static from_string(dict){
+        //define image
+        let image = new dict.type();
+        //copy attributes
+        image.src = dict.src
+        image.label = dict.label
+        image.loaded = dict.loaded;
+        image.image = dict.image;
+        image.width = dict.width;
+        image.height = dict.height;
+        image.red = dict.red
+        image.green = dict.red
+        image.blue = dict.blue
+        image.canvas = dict.canvas;
+        return image;
+    }
+    
+    copy(){
+        //create an image from string
+        return Image_colour.from_string(eval(JSON.stringify(this)));
+    }
+
+    prepare(){
+        //return data
+        return [this.red.copy(),this.green.copy(),this.blue.copy()]
+    }
+    
+    prepare_bw(){
+        //return black matrix
+        return Matrix.add(Matrix.add(Matrix.multiply(this.red,.21),Matrix.multiply(this.green,.72)),Matrix.multiply(this.blue,.07))
+    }
+}
+
+class Image_bw extends Image_{
+    constructor(label,type){
+        super(label,type)
+    }
+
+    shrink(width,height){
+        //find offset
+        let x = 0
+        let y = 0
+        let sf = width/this.width
+        if (width/height > this.width/this.height){
+            sf =  height/this.height
+            //crop x
+            x = Math.round((width-this.width*sf)/2)
+        } else if (width/height < this.width/this.height){
+            //crop y
+            y = Math.round((height-this.height*sf)/2)
+        }
+        
+        //redraw smaller image
+        this.context.drawImage(this.canvas, x, y, this.width*sf, this.height*sf);
+
+        //find width and height
+        this.width = width
+        this.height = height
+
+        //redefine data
+        this.black = new Matrix(this.height,this.width)
+        this.data = this.context.getImageData(0,0,this.width,this.height)
+        for (let i = 0; i < this.width; i++) {
+            for (let j = 0; j < this.height; j++){
+                this.black.data[i][j] = this.data.data[4*(i*this.height+j)]*.21 + this.data.data[4*(i*this.height+j)+1]*.72 + this.data.data[4*(i*this.height+j)+2]*.07;
+                this.data.data[4*(i*this.height+j)] = this.black.data[i][j]
+                this.data.data[4*(i*this.height+j)+1] = this.black.data[i][j]
+                this.data.data[4*(i*this.height+j)+2] = this.black.data[i][j];
+            }
+        }
+        //update canvas
+        this.canvas.width = this.width
+        this.canvas.height = this.height
+        this.context.putImageData(this.data,0,0)
+    }  
+
+    static from_string(dict){
+        let image = new dict.type();
+        //copy attributes
+        image.src = dict.src
+        image.label = dict.label
+        image.loaded = dict.loaded;
+        image.image = dict.image;
+        image.width = dict.width;
+        image.height = dict.height;
+        image.black = dict.black
+        image.canvas = dict.canvas;
+        return image;
+    }
+    
+    copy(){
+        //create an image from string
+        return Image_bw.from_string(eval(JSON.stringify(this)));
+    }
+
+    prepare(){
+        //return data
+        return [this.black.copy()]
+    }
+    
+    prepare_colour(){
+        //return black matrix
+        return [this.black.copy(),this.black.copy(),this.black.copy()]
+    }
+}
+
+class Image_from_src extends Image_colour{
+    constructor(src="",label=""){
+        super(label,Image_from_src);
         //create actual image object
         let image = new Image();
         image.crossOrigin = "Anonymous";
@@ -35,109 +205,40 @@ class Image_from_src {
         //create context
         this.context = this.canvas.getContext('2d');
         this.context.drawImage(image, 0, 0);
-
         //convert pixel data to rgb matrices
-        let pixelData = this.context.getImageData(0,0,this.width,this.height);
+        this.data = this.context.getImageData(0,0,this.width,this.height);
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++){
-                this.red.data[i][j] = pixelData.data[4*(i*this.height+j)];
-                this.green.data[i][j] = pixelData.data[4*(i*this.height+j)+1];
-                this.blue.data[i][j] = pixelData.data[4*(i*this.height+j)+2];
+                this.red.data[i][j] = this.data.data[4*(i*this.height+j)];
+                this.green.data[i][j] = this.data.data[4*(i*this.height+j)+1];
+                this.blue.data[i][j] = this.data.data[4*(i*this.height+j)+2];
             }
         }
         //now loaded
         this.loaded = true;
         this.show()
-        this.resize(256,256)
-        let x = new Image_from_data(this.prepare(),"a")
     }
 
-    resize(width,height){
-        let x = 0
-        let y = 0
-        let sf = width/this.width
-        if (width/height > this.width/this.height){
-            sf =  height/this.height
-            //crop x
-            x = Math.round((width-this.width*sf)/2)
-        } else if (width/height < this.width/this.height){
-            //crop y
-            y = Math.round((height-this.height*sf)/2)
-        }
-        //change canvas size
-        this.canvas.width = width;
-        this.canvas.height = height;
-        //clear canvas
-        this.context.clearRect(0, 0, this.width, this.height);
-        //change image
-        this.context.drawImage(this.image, x, y, this.width*sf, this.height*sf);
-
-        //update variables
-        this.width = width;
-        this.height = height;
-        this.red = new Matrix(this.width,this.height);
-        this.green = new Matrix(this.width,this.height);
-        this.blue = new Matrix(this.width,this.height);
-        let pixelData = this.context.getImageData(0,0,this.width,this.height);
-        for (let i = 0; i < this.width; i++) {
-            for (let j = 0; j < this.height; j++){
-                this.red.data[i][j] = pixelData.data[4*(i*this.height+j)];
-                this.green.data[i][j] = pixelData.data[4*(i*this.height+j)+1];
-                this.blue.data[i][j] = pixelData.data[4*(i*this.height+j)+2];
-            }
-        }
-    }
-
-    static from_string(dict){
-        let image = new Image_();
-        //copy attributes
-        image.src = dict.src
-        image.loaded = dict.loaded;
-        image.image = dict.image;
-        image.width = dict.width;
-        image.height = dict.height;
-        image.red = dict.red
-        image.green = dict.red
-        image.blue = dict.blue
-        image.canvas = dict.canvas;
-        return image;
-    }
-
-    copy(){
-        let copy = new Image_();
-        //copy attributes
-        copy.src = this.src
-        copy.loaded = this.loaded;
-        copy.image = this.image;
-        copy.width = this.width;
-        copy.height = this.height;
-        copy.red = this.red
-        copy.green = this.red
-        copy.blue = this.blue
-        copy.canvas = this.canvas;
-        return copy;
-    }
-
-    show(){
-        //add to document
-        document.body.appendChild(this.canvas);
-    }
-    hide(){
-        //remove from document
-        document.body.removeChild(this.canvas);
-    }
-
-    prepare(){
-        return [this.red,this.green,this.blue]
-    }
 }
-class BW_Image_from_src extends Image_from_src{
-    constructor(src=""){
-        super(src)
-        console.log(2)
+
+class BW_Image_from_src extends Image_bw{
+    constructor(src="",label=""){
+        super(label,BW_Image_from_src)
+
+        //create actual image object
+        let image = new Image();
+        image.crossOrigin = "Anonymous";
+        image.src = src;
+        image.addEventListener("load", () => this.onload(image));
+        
+        //save src
+        this.src = src
+
+        //not yet loaded
+        this.loaded = false;
     }
+
     onload(image){
-        console.log(1)
         //declare image
         this.image = image;
 
@@ -158,92 +259,26 @@ class BW_Image_from_src extends Image_from_src{
         this.context.drawImage(image, 0, 0);
 
         //convert pixel data to rgb matrices
-        let pixelData = this.context.getImageData(0,0,this.width,this.height);
+        this.data = this.context.getImageData(0,0,this.width,this.height);
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++){
-                this.black.data[i][j] = pixelData.data[4*(i*this.height+j)]*.21 + pixelData.data[4*(i*this.height+j)+1]*.72 + pixelData.data[4*(i*this.height+j)+2]*.07;
-                pixelData.data[4*(i*this.height+j)] = this.black.data[i][j]*.21
-                pixelData.data[4*(i*this.height+j)+1] = this.black.data[i][j]*.72
-                pixelData.data[4*(i*this.height+j)+2] = this.black.data[i][j]*.07;
+                this.black.data[i][j] = this.data.data[4*(i*this.height+j)]*.21 + this.data.data[4*(i*this.height+j)+1]*.72 + this.data.data[4*(i*this.height+j)+2]*.07;
+                this.data.data[4*(i*this.height+j)] = this.black.data[i][j]
+                this.data.data[4*(i*this.height+j)+1] = this.black.data[i][j]
+                this.data.data[4*(i*this.height+j)+2] = this.black.data[i][j]
+                this.data.data[4*(i*this.height+j)+3] = 255
             }
         }
+        this.context.putImageData(this.data,0,0)
         //now loaded
         this.loaded = true;
         this.show()
-        this.resize(256,256)
-    }
-
-    resize(width,height){
-        let x = 0
-        let y = 0
-        let sf = width/this.width
-        if (width/height > this.width/this.height){
-            sf =  height/this.height
-            //crop x
-            x = Math.round((width-this.width*sf)/2)
-        } else if (width/height < this.width/this.height){
-            //crop y
-            y = Math.round((height-this.height*sf)/2)
-        }
-        //change canvas size
-        this.canvas.width = width;
-        this.canvas.height = height;
-        //clear canvas
-        this.context.clearRect(0, 0, this.width, this.height);
-        //change image
-        this.context.drawImage(this.image, x, y, this.width*sf, this.height*sf);
-
-        //update variables
-        this.width = width;
-        this.height = height;
-        this.black = new Matrix(this.width,this.height);
-
-        let pixelData = this.context.getImageData(0,0,this.width,this.height);
-        for (let i = 0; i < this.width; i++) {
-            for (let j = 0; j < this.height; j++){
-                this.black.data[i][j] = pixelData.data[4*(i*this.height+j)]*.21 + pixelData.data[4*(i*this.height+j)+1]*.72 + pixelData.data[4*(i*this.height+j)+2]*.07;
-                pixelData.data[4*(i*this.height+j)] = this.black.data[i][j]
-                pixelData.data[4*(i*this.height+j)+1] = this.black.data[i][j]
-                pixelData.data[4*(i*this.height+j)+2] = this.black.data[i][j];
-            }
-        }
-        this.context.putImageData(pixelData,0,0)
-    }
-
-    static from_string(dict){
-        let image = new Image_();
-        //copy attributes
-        image.src = dict.src
-        image.loaded = dict.loaded;
-        image.image = dict.image;
-        image.width = dict.width;
-        image.height = dict.height;
-        image.black = dict.black
-        image.canvas = dict.canvas;
-        return image;
-    }
-
-    copy(){
-        let copy = new Image_();
-        //copy attributes
-        copy.src = this.src
-        copy.loaded = this.loaded;
-        copy.image = this.image;
-        copy.width = this.width;
-        copy.height = this.height;
-        copy.black = this.black
-        copy.canvas = this.canvas;
-        return copy;
-    }
-
-    prepare(){
-        return [this.black]
     }
 }
 
-
-class Image_from_data {
-    constructor(data,label){
+class Image_from_data extends Image_colour {
+    constructor(data,label=""){
+        super(label,Image_from_data);
         //save data
         this.red = data[0] instanceof Matrix ? data[0] : Matrix.fromArray(data[0])
         this.green = data[1] instanceof Matrix ? data[1] : Matrix.fromArray(data[1])
@@ -258,7 +293,7 @@ class Image_from_data {
         this.canvas.height = this.height;
         this.context = this.canvas.getContext('2d');
 
-        this.data = this.context.createImageData(256,256)
+        this.data = this.context.createImageData(this.width,this.height)
         for (let i = 0; i < this.width; i ++){
             for (let j = 0; j < this.height; j ++){
                 this.data.data[4*(i*this.height+j)] = this.red.data[i][j]
@@ -267,92 +302,45 @@ class Image_from_data {
                 this.data.data[4*(i*this.height+j)+3] = 255
             }
         }
-        this.label = label
+
+        //create context
+        this.context.putImageData(this.data,0,0)
+
+        //show
+        this.show()
+    }
+}
+
+class BW_Image_from_data extends Image_bw {
+    constructor(data,label=""){
+        super(label,BW_Image_from_data);
+        //save data
+        this.black = data instanceof Matrix ? data : Matrix.fromArray(data);
+        //calculate width and height
+        this.width = this.black.cols;
+        this.height = this.black.rows;
+
+        //create canvas
+        this.canvas = document.createElement('canvas');
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+        this.context = this.canvas.getContext('2d');
+
+        this.data = this.context.createImageData(this.width,this.height)
+        for (let i = 0; i < this.width; i ++){
+            for (let j = 0; j < this.height; j ++){
+                this.data.data[4*(i*this.height+j)] = this.black.data[i][j]
+                this.data.data[4*(i*this.height+j)+1] = this.black.data[i][j]
+                this.data.data[4*(i*this.height+j)+2] = this.black.data[i][j]
+                this.data.data[4*(i*this.height+j)+3] = 255
+            }
+        }
 
 
         //create context
         this.context.putImageData(this.data,0,0)
         this.show()
-        //this.resize(256,256)
     }
-
-    resize(width,height){
-        let x = 0
-        let y = 0
-        let sf = width/this.width
-        if (width/height > this.width/this.height){
-            sf =  height/this.height
-            //crop x
-            x = Math.round((width-this.width*sf)/2)
-        } else if (width/height < this.width/this.height){
-            //crop y
-            y = Math.round((height-this.height*sf)/2)
-        }
-        //change canvas size
-        this.canvas.width = width;
-        this.canvas.height = height;
-        //clear canvas
-        this.context.clearRect(0, 0, this.width, this.height);
-        //change image
-        this.context.drawImage(this.image, x, y, this.width*sf, this.height*sf);
-
-        //update variables
-        this.width = width;
-        this.height = height;
-        this.black = new Matrix(this.width,this.height);
-
-        let pixelData = this.context.getImageData(0,0,this.width,this.height);
-        for (let i = 0; i < this.width; i++) {
-            for (let j = 0; j < this.height; j++){
-                this.black.data[i][j] = pixelData.data[4*(i*this.height+j)]*.21 + pixelData.data[4*(i*this.height+j)+1]*.72 + pixelData.data[4*(i*this.height+j)+2]*.07;
-                pixelData.data[4*(i*this.height+j)] = this.black.data[i][j]
-                pixelData.data[4*(i*this.height+j)+1] = this.black.data[i][j]
-                pixelData.data[4*(i*this.height+j)+2] = this.black.data[i][j];
-            }
-        }
-        this.context.putImageData(pixelData,0,0)
-    }
-
-    static from_string(dict){
-        let image = new Image_();
-        //copy attributes
-        image.src = dict.src
-        image.loaded = dict.loaded;
-        image.image = dict.image;
-        image.width = dict.width;
-        image.height = dict.height;
-        image.black = dict.black
-        image.canvas = dict.canvas;
-        return image;
-    }
-
-    copy(){
-        let copy = new Image_();
-        //copy attributes
-        copy.src = this.src
-        copy.loaded = this.loaded;
-        copy.image = this.image;
-        copy.width = this.width;
-        copy.height = this.height;
-        copy.black = this.black
-        copy.canvas = this.canvas;
-        return copy;
-    }
-
-    prepare(){
-        return [this.black]
-    }
-
-    show(){
-        //add to document
-        document.body.appendChild(this.canvas);
-    }
-    hide(){
-        //remove from document
-        document.body.removeChild(this.canvas);
-    }
-
 }
-
 
 let image = new Image_from_src("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Ecosia-like_logo.png/220px-Ecosia-like_logo.png");

@@ -1,11 +1,11 @@
 class Convoluting extends Neural_Network {
-    constructor(kernel_width,kernel_height,kernels,activation_function="swish"){
-        super("Convoluting",activation_function,0.001)
+    constructor(kernel_width,kernel_height,kernels,colours=3,activation_function="swish"){
+        super(Convoluting,activation_function,0.001)
         //sizes
         this.length = kernels
         this.width = kernel_width
         this.height = kernel_height
-        this.colours = 3
+        this.colours = colours
         //create kernels
         this.kernels = []
         //loop through kernels
@@ -107,6 +107,8 @@ class Convoluting extends Neural_Network {
     
     copy(){
       //create neural network from string of self
-      return Convoluting.from_string(this)
+      return Convoluting.from_string(eval(JSON.stringify(this)))
     }
 }
+let net = new Convoluting(3,3,2,1)
+console.log(net.forward_propagate([new Matrix(28,28)]))

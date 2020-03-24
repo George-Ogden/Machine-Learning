@@ -1,12 +1,11 @@
 class Flatten extends Neural_Network{
-    constructor(x,y){
-        super("Flatten","identity",1)
+    constructor(x,y,colours=3){
+        super(Flatten,"identity",1)
 		this.x = x;
 		this.y = y;
-		this.colours = 3
+		this.colours = colours
     }
 	forward_propagate(pixel_data){
-		console.log(pixel_data)
         //create output
         let output = new Matrix(1,this.x*this.y*this.colours)
         //loop through layers
@@ -35,12 +34,12 @@ class Flatten extends Neural_Network{
 		}
         return gradient
     }
-	static fromString(dict){
+	static from_string(dict){
 		//create new network
 		let network = new Flatten(this.x,this.y)
 		return network
 	}
 	copy(){
-		return Flatten.fromString(this);
+		return Flatten.from_string(JSON.stringify(this));
 	}
 }
