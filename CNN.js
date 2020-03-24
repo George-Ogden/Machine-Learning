@@ -1,4 +1,5 @@
 class CNN_2 extends Combined_Network {
+    //create combined network based on details
     constructor(inputsx, inputsy, convoluting1x, convoluting1y, convoluting1n, pooling1x, pooling1y, convoluting2x, convoluting2y, convoluting2n, pooling2x, pooling2y, connectedl, connectedw, connectedo, softmaxl, softmaxw, outputs, colours = 1){
         super([new Convoluting(convoluting1x,convoluting1y,convoluting1n,1,"swish"), 
         new Max_Pooling(inputsx-(convoluting1x-1)*convoluting1n,inputsx-(convoluting1y-1)*convoluting1n,pooling1x, pooling1y,1), 
@@ -14,7 +15,7 @@ CNN.show();
 document.body.onclick = function(){
     let input = new BW_Image_from_data(image.prepare_bw())
     input.shrink(28,28)
-    //let training_data = [[input.prepare(),[0.5]]]
+    //let training_set = [[input.prepare(),[0.5]]]
     console.log(CNN.forward_propagate(input.prepare()))
     //CNN.backward_propagate(input.prepare())
     

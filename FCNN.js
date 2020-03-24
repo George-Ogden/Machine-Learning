@@ -33,7 +33,7 @@ class Fully_Connected_Network extends Neural_Network{
       }
     }
     forward_propagate(inputs){
-      let output = inputs instanceof Matrix ? inputs : Matrix.fromArray([inputs])
+      let output = inputs.copy();
 	  this.process = [output.copy()];
       //set first output as input
       for (let i = 0; i < this.length; i++){
@@ -46,20 +46,18 @@ class Fully_Connected_Network extends Neural_Network{
         //add to the current process
         this.process.push(output.copy());
       }
-      return output.data[0];
+      return output;
     }
-    backward_propagate(training_data, n = 1){
+    backward_propagate(training_set, n = 1){
       let error;
       for (let i = 0; i < n; i++){
         //select random input
-        let r = Math.floor(Math.random() * training_data.length);
+        let r = Math.floor(Math.random() * training_set.length);
         //calculate error
         if (n === true){
-          error = training_data
+          error = training_set
         } else {
-          error = Matrix.subtract(training_data[r][1] instanceof Matrix ? training_data[r][1] : Matrix.fromArray([training_data[r][1]]),
-            Matrix.fromArray([this.forward_propagate(training_data[r][0])]),
-          );
+          error = Matrix.subtract(training_set[r][1],this.forward_propagate(training_set[r][0]));
         }
         //loop backwards through rows
         for (let j = this.length - 1; j >= 0; j--){
@@ -102,28 +100,23 @@ class Fully_Connected_Network extends Neural_Network{
       }
       return network;
     }
-    
-    copy(){
-      //create neural network from string of self
-      return Fully_Connected_Network.from_string(eval(JSON.stringify(this)))
-    }
 }
-    /*
-    let network = new Fully_Connected_Network(2,2,3,1,"sigmoid",.01);
+    
+    let network = new Fully_Connected_Network(2,1,3,1,"sigmoid",.01);
     let training_set = [
       [[0,0] , [0]],
       [[0,1] , [1]],
       [[1,0] , [1]],
       [[1,1] , [0]],
   ]
+  training_set = Fully_Connected_Network.prepareTraining(training_set);
+  console.log(training_set)
   for (let i = 0; i < training_set.length; i++){
-      console.log(network.forward_propagate(training_set[i][0]));
+      console.log(network.forward_propagate(training_set[i][0]).data[0][0]);
   }
-  let date = new Date();
-  while (network.cost(training_set) > 0.01){
+   while (network.cost(training_set) > 0.1){
     network.backward_propagate(training_set,1000)
   }
-  console.log(date.getTime()-new Date().getTime())
   for (let i = 0; i < training_set.length; i++){
-  console.log(network.forward_propagate(training_set[i][0]));
-  }*/
+  console.log(network.forward_propagate(training_set[i][0]).data[0][0]);
+  }
