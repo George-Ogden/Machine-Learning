@@ -169,7 +169,60 @@ class Matrix {
         return this.data.reduce((x, y) => x + y.reduce((x, y) => x + y * y, 0), 0);
     }
 
-    copy(){
+    static flatten(matrix) {
+        //initialise new matrix
+        let new_matrix = new Matrix(1, matrix.rows * matrix.cols);
+        //loop through rows and columns
+        for (let i = 0; i < matrix.rows; i++) {
+            for (let j = 0; j < matrix.cols; j++) {
+                //insert each element into the new array
+                new_matrix.data[0][i * matrix.cols + j] = matrix.data[i][j];
+            }
+        }
+        //return new matrix
+        return new_matrix;
+    }
+
+    flatten() {
+        //use static method
+        this.set(Matrix.flatten(this));
+    }
+
+    subsection(x, y, w, h) {
+        //initialise new matrix
+        let new_matrix = new Matrix(h, w);
+        //loop through rows and columns
+        for (let i = y; i < y + h; i++) {
+            for (let j = x; j < x + w; j++) {
+                //flatten
+                new_matrix.data[i - y][j - x] = this.data[i][j];
+            }
+        }
+        //return new matrix
+        return new_matrix;
+    }
+
+    static build(matrix, rows, cols) {
+        //initialise new matrix
+        let new_matrix = new Matrix(rows, cols);
+        //loop through rows and columns
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                //rebuild
+                new_matrix.data[i][j] = matrix.data[0][i * cols + j];
+            }
+        }
+        //return new matrix
+        return new_matrix;
+    }
+
+    build(rows, cols) {
+        //use static method
+        this.set(Matrix.build(this, rows, cols));
+    }
+
+
+    copy() {
         return Matrix.fromArray(eval(JSON.stringify(this.data)))
     }
 }

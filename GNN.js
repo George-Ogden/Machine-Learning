@@ -1,37 +1,37 @@
 class Genetic_Neural_Network extends Fully_Connected_Network {
-    constructor(        inputs,        hidden_layers,        layer_thickness,        outputs,        activation_function    ){
+    constructor(inputs, hidden_layers, layer_thickness, outputs, activation_function) {
         //create FCNN
-        super(inputs, hidden_layers,layer_thickness,outputs,activation_function)
+        super(inputs, hidden_layers, layer_thickness, outputs, activation_function)
         this.type = Genetic_Neural_Network
     }
-    replicate(){
+    replicate() {
         //copy
         return this.copy()
     }
-    mutate(rate=0.1){
+    mutate(rate = 0.1) {
         //define result
         let result = this.copy()
         //loop through all weights and biases
-        for (let i = 0; i < this.length; i++) { 
+        for (let i = 0; i < this.length; i++) {
             //mutate each neuron after coin-toss function
-            result.weights[i].map(x => Math.random() < rate ? x + Math.random()*2-1 : x)
-            result.biases[i].map(x => Math.random() < rate ? x + Math.random()*2-1 : x)
+            result.weights[i].map(x => Math.random() < rate ? x + Math.random() * 2 - 1 : x)
+            result.biases[i].map(x => Math.random() < rate ? x + Math.random() * 2 - 1 : x)
         }
         //return result
         return result
     }
-    static crossover(network1,network2,weight=0.5){
+    static crossover(network1, network2, weight = 0.5) {
         //define results
         let result = network1.copy()
         network1 = network1.copy()
         network2 = network2.copy()
         //loop through all weights and biases
-        for (let i = 0; i < network1.length; i++) { 
+        for (let i = 0; i < network1.length; i++) {
             //loop through matrix details
-            for (let j = 0; j < network1.weights[i].rows; j++){
-                for (let k = 0; k < network1.weights[i].cols; k++){
-                    //crossover each neuron after coin-toss function
-                    result.weights[i].data[j][k] = Math.random() < weight ? network1.weights[i].data[j][k]:network2.weights[i].data[j][k]
+            for (let j = 0; j < network1.weights[i].rows; j++) {
+                for (let k = 0; k < network1.weights[i].cols; k++) {
+                    //choose random DNA from parents
+                    result.weights[i].data[j][k] = Math.random() < weight ? network1.weights[i].data[j][k] : network2.weights[i].data[j][k]
                 }
             }
         }
