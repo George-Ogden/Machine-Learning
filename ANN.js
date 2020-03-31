@@ -19,6 +19,7 @@ class Neural_Network {
                 value += Matrix.subtract(test_data[i][1], this.forward_propagate(test_data[i][0])).rss();
             }
             //return average
+            this.value = value / test_data.length
             return value / test_data.length;
         } else {
             for (let i = 0; i < n; i++) {
@@ -26,13 +27,14 @@ class Neural_Network {
                 //find errors squared
                 value += Matrix.subtract(test_data[r][1], this.forward_propagate(test_data[r][0])).rss();
             }
+            this.value  = value/n
             //return average
             return value / n;
         }
     }
     copy() {
         //create network from string of self
-        return eval(this.type).from_string(eval(JSON.stringify(this)));
+        return eval(this.type).from_string(this);
     }
     static prepareInput(input) {
         //convert 1D array to matrix
@@ -41,19 +43,5 @@ class Neural_Network {
     static prepareTraining(training_set) {
         //convert training data to matrix pairs
         return training_set.map(x => [Matrix.fromArray([x[0]]), Matrix.fromArray([x[1]])])
-    }
-    static prepareTrainingImages(training_set) {
-        //convert training data to matrix pairs
-        return training_set.map(x => [
-            x[0].map(x => Matrix.multiply(x,1/255)), Matrix.fromArray([x[1]])
-        ])
-    }
-    static prepareDatasets(training_set, len=1) {
-        //convert training data to matrix pairs
-        return training_set.map(function (x){
-            let result = new Array(len).fill(0);
-            result[x[1][0]-1] = 1;
-            return [[Matrix.multiply(Matrix.fromArray(x[0]),1/255)], Matrix.fromArray([result])]
-        })
     }
 }

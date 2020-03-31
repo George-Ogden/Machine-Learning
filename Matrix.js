@@ -169,4 +169,7 @@ class Matrix {
         return this.data.reduce((x, y) => x + y.reduce((x, y) => x + y * y, 0), 0);
     }
 
+    copy(){
+        return Matrix.fromArray(eval(JSON.stringify(this.data)))
+    }
 }

@@ -1,12 +1,5 @@
 class Fully_Connected_Network extends Neural_Network {
-    constructor(
-        inputs,
-        hidden_layers,
-        layer_thickness,
-        outputs,
-        activation_function,
-        learning_rate = 0.1
-    ) {
+    constructor(        inputs,        hidden_layers,        layer_thickness,        outputs,        activation_function,        learning_rate = 0.1    ) {
         //superclass constructor
         super(Fully_Connected_Network, activation_function, learning_rate)
         //initialise variables
@@ -90,17 +83,14 @@ class Fully_Connected_Network extends Neural_Network {
             dict.learning_rate
         );
         //set variables
-        network.process = dict.process;
-        network.weights = dict.weights;
-        network.biases = dict.biases;
         for (let i = 0; i < network.length; i++) {
-            network.weights[i] = Matrix.fromArray(network.weights[i].data);
-            network.biases[i] = Matrix.fromArray(network.biases[i].data);
+            network.weights[i] = network.weights[i].copy();
+            network.biases[i] = network.biases[i].copy();
         }
         return network;
     }
 }
-
+/*
 let network = new Fully_Connected_Network(2, 1, 3, 1, "sigmoid");
 let training_data = [
     [
@@ -120,13 +110,14 @@ let training_data = [
         [0]
     ],
 ]
-const training_set = Fully_Connected_Network.prepareTraining(training_set);
+const training_set = Fully_Connected_Network.prepareTraining(training_data);
 for (let i = 0; i < training_set.length; i++) {
     console.log(network.forward_propagate(training_set[i][0]).data[0][0]);
 }
-while (network.cost(training_set) > 0.01) {
+while (network.cost(training_set) > 1) {
     network.backward_propagate(training_set, 1000)
 }
 for (let i = 0; i < training_set.length; i++) {
     console.log(network.forward_propagate(training_set[i][0]).data[0][0]);
 }
+*/
