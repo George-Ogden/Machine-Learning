@@ -225,4 +225,31 @@ class Matrix {
     copy() {
         return Matrix.fromArray(eval(JSON.stringify(this.data)))
     }
+
+    max(){
+		//keep only max value
+		return this.data.reduce((x,y) => Math.max(x,y.reduce((x,y) => Math.max(x,y))),-Infinity);
+    }
+
+
+    find(x){
+		for (let i = 0; i < this.rows; i ++){
+			for (let j = 0; j < this.cols;  j++){
+				//check if plot needs a value
+				if (this.data[i][j] == x){
+                    return [i,j];
+				}
+			}
+      	}
+    }
+    
+    max_plot(){
+		//define null plot
+		let plot = new Matrix(this.rows, this.cols);
+		//find max
+		let max = this.max();
+        plot.reset()
+        plot.data[this.find(max)[0]][this.find(max)[1]] = 1
+        return plot
+	}
 }

@@ -22,21 +22,21 @@ class Population {
     }
     fitnesses(data_set) {
         //calculate fitness
-        let fitness = this.fitness(data_set) * this.number;
+        let fitness = this.population.reduce((a, b) => a + Math.pow(1 / b.cost(data_set), 2), 0)
         //return list of probabilities of being chosen
-        return this.apply(network => (1 / network.cost(data_set)) / fitness)
+        return this.apply(network => (Math.pow(1 / network.cost(data_set), 2) / fitness))
     }
     sort(data_set) {
         //sort population from fittest to fattest
         this.population = this.population.sort((a, b) => a.cost(data_set) - b.cost(data_set))
     }
-    reproduce(data_set, generations = 1, elitists = 1, mutation_rate = 0.7, crossover_rate = 0.3) {
+    reproduce(data_set, generations = 1, elitists = 1, mutation_rate = 0.4, crossover_rate = 0.5) {
         //repeat n times
         for (let n = 0; n < generations; n++) {
             //sort population
             this.sort(data_set)
             //get probabilities
-            let fitnesses = this.fitnesses(data_set)
+            const fitnesses = this.fitnesses(data_set)
             //transfer elititists
             let next_generation = this.population.slice(0, elitists)
 
@@ -81,29 +81,12 @@ class Population {
             //console.log(p.populations[p.generation][0].cost(data_set),p.generation)
         }
     }
-}
-let p = new Population(20, 2, 1, 3, 1, "sigmoid")
-const data_set = Genetic_Neural_Network.prepareTraining([
-    [
-        [0, 0],
-        [0]
-    ],
-    [
-        [0, 1],
-        [1]
-    ],
-    [
-        [1, 0],
-        [1]
-    ],
-    [
-        [1, 1],
-        [0]
-    ],
-])
-p.sort(data_set)
-console.log(p.population[0].cost(data_set), 0)
-for (let i = 0; i < 200; i++) {
-    p.reproduce(data_set)
-    console.log(p.populations[p.generation][0].cost(data_set), p.generation)
+    static from_string(generation) {
+        //create new population
+        let population = new Population(generation.length, generation[0].inputs, generation[0].length, generation[0].width, generation.outputs, generation.activation_function_name)
+        //reset population
+        population.population = generation.map(x => Genetic_Neural_Network.from_string(x))
+
+        return population
+    }
 }
