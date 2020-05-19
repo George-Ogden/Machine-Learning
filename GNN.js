@@ -22,21 +22,16 @@ class Genetic_Neural_Network extends Fully_Connected_Network {
     }
     static crossover(network1, network2, weight = 0.5) {
         //define results
-        let result = network1.copy()
         network1 = network1.copy()
         network2 = network2.copy()
         //loop through all weights and biases
         for (let i = 0; i < network1.length; i++) {
             //loop through matrix details
-            for (let j = 0; j < network1.weights[i].rows; j++) {
-                for (let k = 0; k < network1.weights[i].cols; k++) {
-                    //choose random DNA from parents
-                    result.weights[i].data[j][k] = Math.random() < weight ? network1.weights[i].data[j][k] : network2.weights[i].data[j][k]
-                }
-            }
+            network1.weights[i].set(network1.weights[i].map((x,y) => Math.random() < weight ?x : y,network2.weights[i]))
+            network1.biases[i].set(network1.biases[i].map((x,y) => Math.random() < weight ?x : y,network2.biases[i]))
         }
         //return results
-        return result
+        return network1.mutate(0.01)
     }
     static from_string(dict) {
         //create new network

@@ -4,6 +4,13 @@ class Umpire {
         this.board = new Matrix(board_size, board_size)
         this.size = board_size
     }
+    static shuffle(a){
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            a[i], a[j] = a[j], a[i]
+        }
+        return a;
+    }
     check_state() {
         //"abstract method"
         return 0;
@@ -17,25 +24,24 @@ class Umpire {
         for (let i = 0; i < this.size * this.size; i++) {
             //decide which player plays
             if (i % 2 == 0) {
-                //forward propagate board to get move
-                let move = player1.forward_propagate(this.board)
+                //forward propagate board to get move or play a random move to increase diversity
+                let move = Math.random() < 0.01 ? new Matrix(1, this.size * this.size) : player1.forward_propagate(this.board)
                 //find max output not filled
-                let position = move.find(move.max());
-                while (this.board.data[position[0]][position[1]] != 0) {
-                    move.data[position[0]][position[1]] = -1
-                    position = move.find(move.max());
+                let position = move.find(move.max())[1];
+                while (this.board.data[0][position] != 0) {
+                    move.data[0][position] = -2
+                    position = move.find(move.max())[1];
                 }
                 //add move to board
                 this.board.add(move.max_plot())
             } else {
-                //forward propagate board to get move
+                //forward propagate board to get move or play a random move to increase diversity
+                let move = Math.random() < 0.01? new Matrix(1, this.size * this.size) : player2.forward_propagate(Matrix.multiply(this.board,-1))
                 //find max output not filled
-                player2.forward_propagate(Matrix.multiply(this.board, -1))
-                let move = player2.forward_propagate(this.board)
-                let position = move.find(move.max());
-                while (this.board.data[position[0]][position[1]] != 0) {
-                    move.data[position[0]][position[1]] = -1
-                    position = move.find(move.max());
+                let position = move.find(move.max())[1];
+                while (this.board.data[0][position] != 0) {
+                    move.data[0][position] = -2
+                    position = move.find(move.max())[1];
                 }
                 //add move to board
                 this.board.subtract(move.max_plot())
@@ -44,10 +50,9 @@ class Umpire {
             let state = this.check_state()
             //if someone has won, return winner
             if (state != 0) {
-                this.board.build
+                this.board.build(this.size, this.size)
                 return state
             }
-
         }
         //rebuild board
         this.board.build(this.size, this.size)
@@ -60,16 +65,16 @@ class Umpire {
         this.board.flatten()
         //loop through number of points depending on who starts
         for (let i = -starter; i < this.size * this.size - starter; i++) {
-            Matrix.map(Matrix.build(Matrix.multiply(this.board, -1), 3, 3), x => x > 0 ? "X" : x < 0 ? "O" : " ").show();
+            Matrix.map(Matrix.build(this.board, this.size, this.size), x => x > 0 ? "X" : x < 0 ? "O" : " ").show();
             //decide which player plays
             if (i % 2 == 0) {
                 //forward propagate board to get move
                 let move = computer.forward_propagate(this.board)
                 //find max output not filled
-                let position = move.find(move.max());
-                while (this.board.data[position[0]][position[1]] != 0) {
-                    move.data[position[0]][position[1]] = -1
-                    position = move.find(move.max());
+                let position = move.find(move.max())[1];
+                while (this.board.data[0][position] != 0) {
+                    move.data[0][position] = -2
+                    position = move.find(move.max())[1];
                 }
                 //add move to board
                 this.board.add(move.max_plot())
@@ -80,10 +85,57 @@ class Umpire {
             }
             let state = this.check_state()
             if (state != 0) {
-                this.board.build
+                this.board.build(this.size, this.size)
                 return state
             }
         }
+        this.board.build(this.size, this.size)
+        return 0
+    }
+    exhibit(player1, player2) {
+        //flatten board
+        this.board.flatten()
+        //clear board
+        this.board.reset()
+        //loop through number of points
+        for (let i = 0; i < this.size * this.size; i++) {
+            Matrix.map(Matrix.build(this.board, this.size, this.size), x => x > 0 ? "X" : x < 0 ? "O" : " ").show();
+            confirm()
+            //decide which player plays
+            if (i % 2 == 0) {
+                //forward propagate board to get move
+                let move = player1.forward_propagate(this.board)
+                //find max output not filled
+                let position = move.find(move.max())[1];
+                while (this.board.data[0][position] != 0) {
+                    move.data[0][position] = -2
+                    position = move.find(move.max())[1];
+                }
+                //add move to board
+                this.board.add(move.max_plot())
+            } else {
+                //forward propagate board to get move
+                //find max output not filled
+                let move = player2.forward_propagate(Matrix.multiply(this.board,-1))
+                let position = move.find(move.max())[1];
+                while (this.board.data[0][position] != 0) {
+                    move.data[0][position] = -2
+                    position = move.find(move.max())[1];
+                }
+                //add move to board
+                this.board.subtract(move.max_plot())
+            }
+            //check if someone is winning
+            let state = this.check_state()
+            //if someone has won, return winner
+            if (state != 0) {
+                Matrix.map(Matrix.build(this.board, this.size, this.size), x => x > 0 ? "X" : x < 0 ? "O" : " ").show();
+                this.board.build(this.size, this.size)
+                return state
+            }
+        }
+        //rebuild board
+        Matrix.map(Matrix.build(this.board, this.size, this.size), x => x > 0 ? "X" : x < 0 ? "O" : " ").show();
         this.board.build(this.size, this.size)
         return 0
     }
