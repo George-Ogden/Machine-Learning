@@ -14,6 +14,12 @@ class Matrix {
         this.randomise();
     }
 
+    static blank(rows,cols){
+        let matrix = new Matrix(rows, cols)
+        matrix.reset();
+        return matrix;
+    }
+
     static fromArray(array) {
         //crete a new matrix
         let new_matrix = new Matrix(array.length, array[0].length);
@@ -165,8 +171,18 @@ class Matrix {
     }
 
     rss() {
-        //return each element squared
+        //return sum of each element squared
         return this.data.reduce((x, y) => x + y.reduce((x, y) => x + y * y, 0), 0);
+    }
+
+    sum() {
+        //return sum of matrix
+        return this.data.reduce((x, y) => x + y.reduce((x, y) => x + y, 0), 0);
+    }
+
+    abs_sum() {
+        //return sum of each element's modulus
+        return this.data.reduce((x, y) => x + y.reduce((x, y) => x + Math.abs(y), 0), 0);
     }
 
     static flatten(matrix) {
