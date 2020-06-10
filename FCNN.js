@@ -27,23 +27,12 @@ class Fully_Connected_Network extends Neural_Network {
         this.weights[this.length - 1] = new Matrix(this.width, outputs);
         this.weight_deltas[this.length - 1] = Matrix.blank(this.width, outputs);
         this.biases[this.length - 1] = new Matrix(1, outputs);
-<<<<<<< HEAD
-
-        //initialise on deltas
-        this.weight_deltas = []
-        this.bias_deltas = []
-        for (let i = 0; i < this.length; i++) {
-            this.weight_deltas.push(Matrix.blank(this.weights[i].rows,this.weights[i].cols))
-            this.bias_deltas.push(Matrix.blank(1, this.biases[i].cols))
-        }
-=======
         this.bias_deltas[this.length - 1] = Matrix.blank(1, outputs);
 
     }
     copy() {
         //create network from string of self
         return eval(this.type).from_string(this);
->>>>>>> old
     }
     show() {
         //display weights and biases
@@ -69,10 +58,6 @@ class Fully_Connected_Network extends Neural_Network {
         return output;
     }
     backward_propagate(error) {
-<<<<<<< HEAD
-=======
-        //console.log(error,this)
->>>>>>> old
         //loop backwards through rows
         for (let j = this.length - 1; j >= 0; j--) {
             //calculate the gradients
@@ -87,11 +72,7 @@ class Fully_Connected_Network extends Neural_Network {
             //add the deltas
             this.bias_deltas[j].add(Matrix.multiply(gradient,1/this.biases[j].abs_sum()));
             this.weight_deltas[j].add(
-<<<<<<< HEAD
-                Matrix.dot(Matrix.transpose(this.process[j]), gradient),
-=======
                 Matrix.dot(Matrix.transpose(this.process[j]), Matrix.multiply(gradient,1/this.weights[j].abs_sum()))
->>>>>>> old
             );
         }
         return error
@@ -165,18 +146,11 @@ const training_set = Fully_Connected_Network.prepareTraining(training_data);
 for (let i = 0; i < training_set.length; i++) {
     console.log(network.forward_propagate(training_set[i][0]).data[0][0]);
 }
-<<<<<<< HEAD
-=======
-function run(n=1001){
+function run(n=1000){
     network.train(training_set,n)
 }
->>>>>>> old
 function finish(){
     for (let i = 0; i < training_set.length; i++) {
         console.log(network.forward_propagate(training_set[i][0]).data[0][0]);
     }
-<<<<<<< HEAD
-}
-=======
 }*/
->>>>>>> old
