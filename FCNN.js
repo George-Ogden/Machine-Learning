@@ -1,22 +1,33 @@
+const Matrix = require("./Matrix.js");
+const Neural_Network = require("./ANN.js")
+const Activation_Function = require("./Activation_Functions.js")
 class Fully_Connected_Network extends Neural_Network {
     constructor(        inputs,        hidden_layers,        layer_thickness,        outputs,        activation_function,        learning_rate = 0.1    ) {
         //superclass constructor
-        super(Fully_Connected_Network, activation_function, learning_rate)
+        super("Fully_Connected_Network", activation_function, learning_rate)
         //initialise variables
         this.length = hidden_layers + 2;
         this.width = layer_thickness;
         //creates weights and biases matrices
         this.weights = [];
-        for (let i = 0; i < this.length; i++) {
-            this.weights.push(new Matrix(this.width, this.width));
-        }
-        this.weights[0] = new Matrix(inputs, this.width);
-        this.weights[this.length - 1] = new Matrix(this.width, outputs);
         this.biases = [];
+        //initialise on deltas
+        this.weight_deltas = []
+        this.bias_deltas = []
         for (let i = 0; i < this.length; i++) {
+            //set up values
+            this.weights.push(new Matrix(this.width, this.width));
             this.biases.push(new Matrix(1, this.width));
+            this.weight_deltas.push(Matrix.blank(this.weights[i].rows,this.weights[i].cols))
+            this.bias_deltas.push(Matrix.blank(1, this.biases[i].cols))
         }
+        //alter significant matrices
+        this.weights[0] = new Matrix(inputs, this.width);
+        this.weight_deltas[0] = Matrix.blank(inputs, this.width);
+        this.weights[this.length - 1] = new Matrix(this.width, outputs);
+        this.weight_deltas[this.length - 1] = Matrix.blank(this.width, outputs);
         this.biases[this.length - 1] = new Matrix(1, outputs);
+<<<<<<< HEAD
 
         //initialise on deltas
         this.weight_deltas = []
@@ -25,6 +36,14 @@ class Fully_Connected_Network extends Neural_Network {
             this.weight_deltas.push(Matrix.blank(this.weights[i].rows,this.weights[i].cols))
             this.bias_deltas.push(Matrix.blank(1, this.biases[i].cols))
         }
+=======
+        this.bias_deltas[this.length - 1] = Matrix.blank(1, outputs);
+
+    }
+    copy() {
+        //create network from string of self
+        return eval(this.type).from_string(this);
+>>>>>>> old
     }
     show() {
         //display weights and biases
@@ -50,6 +69,10 @@ class Fully_Connected_Network extends Neural_Network {
         return output;
     }
     backward_propagate(error) {
+<<<<<<< HEAD
+=======
+        //console.log(error,this)
+>>>>>>> old
         //loop backwards through rows
         for (let j = this.length - 1; j >= 0; j--) {
             //calculate the gradients
@@ -64,9 +87,14 @@ class Fully_Connected_Network extends Neural_Network {
             //add the deltas
             this.bias_deltas[j].add(Matrix.multiply(gradient,1/this.biases[j].abs_sum()));
             this.weight_deltas[j].add(
+<<<<<<< HEAD
                 Matrix.dot(Matrix.transpose(this.process[j]), gradient),
+=======
+                Matrix.dot(Matrix.transpose(this.process[j]), Matrix.multiply(gradient,1/this.weights[j].abs_sum()))
+>>>>>>> old
             );
         }
+        return error
 
     }
     update(){
@@ -111,7 +139,8 @@ class Fully_Connected_Network extends Neural_Network {
         return network;
     }
 }
-
+module.exports = Fully_Connected_Network
+/*
 
 let network = new Fully_Connected_Network(2, 1, 3, 1, "sigmoid",0.5);
 let training_data = [
@@ -136,8 +165,18 @@ const training_set = Fully_Connected_Network.prepareTraining(training_data);
 for (let i = 0; i < training_set.length; i++) {
     console.log(network.forward_propagate(training_set[i][0]).data[0][0]);
 }
+<<<<<<< HEAD
+=======
+function run(n=1001){
+    network.train(training_set,n)
+}
+>>>>>>> old
 function finish(){
     for (let i = 0; i < training_set.length; i++) {
         console.log(network.forward_propagate(training_set[i][0]).data[0][0]);
     }
+<<<<<<< HEAD
 }
+=======
+}*/
+>>>>>>> old
