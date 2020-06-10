@@ -1,3 +1,6 @@
+const Matrix = require("./Matrix.js");
+const activation_functions = require("./Activation_Functions.js").activation_functions;
+const fs = require("fs")
 class Neural_Network {
     constructor(type, activation_function="identity", learning_rate = 1) {
         //add activation function
@@ -9,7 +12,9 @@ class Neural_Network {
     }
     show() {}
     forward_propagate(inputs) {}
-    backward_propagate(training_set) {}
+    backward_propagate(error) {}
+    update() {}
+    
     cost(test_data, n=0) {
         //starte with no cost
         let value = 0;
@@ -32,7 +37,7 @@ class Neural_Network {
     }
     copy() {
         //create network from string of self
-        return eval(this.type).from_string(eval(JSON.stringify(this)));
+        return eval(this.type).from_string(eval("(" + JSON.stringify(this) + ")"));
     }
     static prepareInput(input) {
         //convert 1D array to matrix
@@ -56,4 +61,11 @@ class Neural_Network {
             return [[Matrix.multiply(Matrix.fromArray(x[0]),1/255)], Matrix.fromArray([result])]
         })
     }
+    static load(type,name=type){
+        return eval(type).from_string(fs.readFileSync(name+".txt").toString())
+    }
+    save(name = this.type){
+        fs.writeFileSync(name+".txt",JSON.stringify(this))
+    }
 }
+module.exports = Neural_Network

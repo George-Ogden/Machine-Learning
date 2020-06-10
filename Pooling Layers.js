@@ -47,8 +47,6 @@ class Max_Pooling extends Neural_Network {
                     gradient.insert(Matrix.multiply(this.process[i].subsection(x, y, dx, dy).max_plot(), error[i].data[y / this.dy][x / this.dx]), x, y);
                 }
             }
-            //multiply by learning rate
-            gradient.multiply(this.learning_rate)
             //reset error
             error[i].set(gradient)
         }

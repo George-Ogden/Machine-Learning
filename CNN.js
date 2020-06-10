@@ -1,3 +1,5 @@
+const Combined_Network = require("./Combined Network.js")
+const Image = require("./Image.js")
 class CNN_2 extends Combined_Network {
     //create combined network based on details
     constructor(inputsx, inputsy, convoluting1x, convoluting1y, convoluting1n, pooling1x, pooling1y, convoluting2x, convoluting2y, convoluting2n, pooling2x, pooling2y, connectedl, connectedw, connectedo, softmaxl, softmaxw, outputs, colours = 1){
@@ -20,3 +22,4 @@ document.body.onclick = function(){
     //CNN.backward_propagate(input.prepare())
     
 }
+module.exports = CNN_2

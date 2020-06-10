@@ -1,23 +1,26 @@
-class activation_function {
+const lambert_W = require("./lambertw.js").lambert_W0
+class Activation_Function {
     constructor(func, derivative) {
         this.function = func;
         this.derivative = derivative;
     }
 }
 //identity
-let identity = new activation_function(x => x, x => 1);
+const identity = new Activation_Function(x => x, x => 1);
 //sigmoid
-let sigmoid = new activation_function(x => 1 / (1 + Math.exp(-x)), x => x * (1 - x));
+const sigmoid = new Activation_Function(x => 1 / (1 + Math.exp(-x)), x => x * (1 - x));
 //tanh
-let tanh = new activation_function(x => Math.tanh(x), x => 1 - x * x);
+const tanh = new Activation_Function(x => Math.tanh(x), x => 1 - x * x);
 //ReLU
-let ReLU = new activation_function(x => (x > 0) ? x : 0, x => (x > 0) ? 1 : 0);
+const ReLU = new Activation_Function(x => (x > 0) ? x : 0, x => (x > 0) ? 1 : 0);
 //leaky ReLU
-let lReLU = new activation_function(x => (x > 0) ? x : 0.1 * x, x => (x > 0) ? 1 : 0.1);
+const lReLU = new Activation_Function(x => (x > 0) ? x : 0.1 * x, x => (x > 0) ? 1 : 0.1);
 //SoftPlus
-let SoftPlus = new activation_function(x => Math.log(1 + Math.exp(x)), x => 1 - 1 / Math.exp(x));
+const SoftPlus = new Activation_Function(x => Math.log(1 + Math.exp(x)), x => 1 - 1 / Math.exp(x));
 //swish
-let swish = new activation_function(x => x / (1 + Math.exp(-x)), x => x == 0 ? 0.5 : x + x * (1 - x) / (lambert_W0(x * Math.exp(-x)) + x));
+const swish = new Activation_Function(x => x / (1 + Math.exp(-x)), x => x == 0 ? 0.5 : x + x * (1 - x) / (lambert_W(x * Math.exp(-x)) + x));
+//softplus
+const softplus = new Activation_Function(x =>Math.log(1+Math.exp(x)),x => 1-exp(-x));
 
 activation_functions = {
     "sigmoid": sigmoid,
@@ -26,5 +29,7 @@ activation_functions = {
     "lReLU": lReLU,
     "SoftPlus": SoftPlus,
     "swish": swish,
-    "identity": identity
+    "identity": identity,
+    "softplus": softplus
 };
+exports.activation_functions = activation_functions

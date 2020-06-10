@@ -1,5 +1,8 @@
-class Combined_Network {
+const Neural_Network = require("./ANN.js")
+const Matrix = require("./Matrix.js")
+class Combined_Network extends Neural_Network {
     constructor(networks) {
+        super("Combined_Neural_Network")
         //create an array of networks
         this.networks = []
         this.length = networks.length
@@ -59,3 +62,4 @@ class Combined_Network {
         }
     }
 }
+module.exports = Combined_Network

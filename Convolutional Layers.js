@@ -8,12 +8,16 @@ class Convoluting extends Neural_Network {
         this.colours = colours
         //create kernels
         this.kernels = []
+        //initialise deltas
+        this.kernel_deltas = []
         //loop through kernels
         for (let i = 0; i < this.colours; i++) {
             this.kernels.push([])
+            this.kernel_deltas.push([])
             for (let j = 0; j < kernels; j++) {
                 //insert kernel into array
                 this.kernels[i].push(new Matrix(kernel_height, kernel_width))
+                this.kernel_deltas[i].push(Matrix.blank(kernel_height, kernel_width))
             }
         }
     }
@@ -67,15 +71,25 @@ class Convoluting extends Neural_Network {
             for (let j = this.length - 1; j >= 0; j--) {
                 //find gradient using convolution
                 let gradient = Convoluting.convolution(this.process[i][j], error[i])
-                //multiply by learning rate
-                gradient.multiply(this.learning_rate)
                 //find the previous error through full convolution
                 error[i] = Convoluting.full_convolution(error[i], this.kernels[i][j])
                 //add gradient
-                this.kernels[i][j].add(gradient)
+                this.kernel_deltas[i][j].add(Matrix.multiply(gradient,1/this.kernels[i][j].abs_sum()))
             }
         }
         return error
+    }
+
+    update(){
+        for (let i = 0; i < this.colours; i++) {
+            for (let j = 0; j < kernels; j++) {
+            //add deltas to kernels
+            this.kernels[i][j].add(Matrix.multiply(this.kernel_deltas[i][j],this.learning_rate))
+
+            //reset deltas
+            this.kernel_deltas[i][j].reset()
+            }
+        }
     }
 
     show() {
@@ -99,7 +113,7 @@ class Convoluting extends Neural_Network {
         //add kernels
         for (let i = 0; i < this.colours; i++) {
             for (let j = 0; j < this.length; j++) {
-                network.kernels[i][j] = Matrix.fromArray(network.kernels[i][j].data);
+                network.kernels[i][j] = network.kernels[i][j].copy();
             }
         }
         return network;
