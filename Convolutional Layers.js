@@ -1,3 +1,5 @@
+const Matrix = require("./Matrix.js");
+const Neural_Network = require("./ANN.js");
 class Convoluting extends Neural_Network {
     constructor(kernel_width, kernel_height, kernels, colours = 3, activation_function = "swish") {
         super(Convoluting, activation_function, 0.001)
@@ -119,5 +121,4 @@ class Convoluting extends Neural_Network {
         return network;
     }
 }
-let net = new Convoluting(3, 3, 2, 1)
-console.log(net.forward_propagate([new Matrix(28, 28)]))
+module.exports = Convoluting

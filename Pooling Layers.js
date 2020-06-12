@@ -1,3 +1,5 @@
+const Matrix = require("./Matrix.js");
+const Neural_Network = require("./ANN.js");
 class Max_Pooling extends Neural_Network {
     constructor(x, y, dx, dy, colours = 3) {
         super(Max_Pooling, "identity", 1)
@@ -120,4 +122,8 @@ class Average_Pooling extends Neural_Network {
         let network = new Average_Pooling(this.x, this.y, this.dx, this.dy)
         return network
     }
+}
+module.exports = {
+    "max":Max_Pooling,
+    "avg":Average_Pooling
 }
