@@ -64,10 +64,10 @@ class Neural_Network {
         })
     }
     static load(type,name=type){
-        return eval(type).from_string(fs.readFileSync(name+".txt").toString())
+        return eval(type).from_string(fs.readFileSync(name+".json").toString())
     }
     save(name = this.type){
-        fs.writeFileSync(name+".txt",JSON.stringify(this))
+        fs.writeFileSync(name+".json",JSON.stringify(this))
     }
 }
 module.exports = Neural_Network

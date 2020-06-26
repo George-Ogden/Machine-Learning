@@ -4,7 +4,7 @@ const Max_Pooling = require("./Pooling Layers").max
 const Flatten = require("./Combined Network.js")
 const Fully_Connected_Network = require("./Combined Network.js")
 const BW_Image_from_data = require("./Image.js").bw_data
-const image = require("./Image.js").image
+const image = require("./Image.js").eco
 class CNN_2 extends Combined_Network {
     //create combined network based on details
     constructor(inputsx, inputsy, convoluting1x, convoluting1y, convoluting1n, pooling1x, pooling1y, convoluting2x, convoluting2y, convoluting2n, pooling2x, pooling2y, connectedl, connectedw, connectedo, softmaxl, softmaxw, outputs, colours = 1){
@@ -29,12 +29,10 @@ class CNN_1 extends Combined_Network {
 }
 let CNN = new CNN_2(28,28,3,3,2,2,2,3,3,2,2,2,2,12,10,1,5,1,1)
 CNN.show();
-document.body.onclick = function(){
-    let input = new BW_Image_from_data(image.prepare_bw())
-    input.shrink(28,28)
-    //let training_set = [[input.prepare(),[0.5]]]
-    console.log(CNN.forward_propagate(input.prepare()))
-    //CNN.backward_propagate(input.prepare())
+
+let input = new BW_Image_from_data(image.prepare_bw())
+input.shrink(28,28)
+//let training_set = [[input.prepare(),[0.5]]]
+console.log(CNN.forward_propagate(input.prepare()))
+//CNN.backward_propagate(input.prepare())
     
-}
-module.exports = CNN_2

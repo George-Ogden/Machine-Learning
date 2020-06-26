@@ -171,17 +171,22 @@ class Image_BW extends Image_ {
 class Image_from_src extends Image_colour {
     constructor(src = "", label = "") {
         super(label, Image_from_src);
+        //not yet loaded
+        this.loaded = false;
+        //save src
+        this.src = src
         //create actual image object
         let image = new Image();
         image.crossOrigin = "Anonymous";
         image.src = src;
-        image.addEventListener("load", () => this.onload(image));
-
-        //save src
-        this.src = src
-
-        //not yet loaded
-        this.loaded = false;
+        (async function(){
+            return new Promise((resolve, reject) => {
+                img.onload = async () => {
+                    this.onload
+                    resolve(true);
+                };
+            });
+        }).then(this.loaded = true)
     }
 
     onload(image) {
@@ -224,18 +229,22 @@ class Image_from_src extends Image_colour {
 class BW_Image_from_src extends Image_BW {
     constructor(src = "", label = "") {
         super(label, BW_Image_from_src)
-
+        //not yet loaded
+        this.loaded = false;
+        //save src
+        this.src = src
         //create actual image object
         let image = new Image();
         image.crossOrigin = "Anonymous";
         image.src = src;
-        image.addEventListener("load", () => this.onload(image));
-
-        //save src
-        this.src = src
-
-        //not yet loaded
-        this.loaded = false;
+        (async function(){
+            return new Promise((resolve, reject) => {
+                img.onload = async () => {
+                    this.onload
+                    resolve(true);
+                };
+            });
+        }).then(this.loaded = true)
     }
 
     onload(image) {
