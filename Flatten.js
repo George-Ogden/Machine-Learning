@@ -2,7 +2,7 @@ const Matrix = require("./Matrix.js");
 const Neural_Network = require("./ANN.js");
 class Flatten extends Neural_Network {
     constructor(x, y, colours = 3) {
-        super(Flatten, "identity", 1)
+        super("Flatten", "identity")
         this.x = x;
         this.y = y;
         this.colours = colours
@@ -40,8 +40,7 @@ class Flatten extends Neural_Network {
     }
     static from_string(dict) {
         //create new network
-        let network = new Flatten(this.x, this.y, this.colours)
-        return network
+        return new Flatten(dict.x, dict.y, dict.colours)
     }
 }
 module.exports = Flatten

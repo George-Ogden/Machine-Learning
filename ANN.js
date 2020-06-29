@@ -49,10 +49,10 @@ class Neural_Network {
         //convert training data to matrix pairs
         return training_set.map(x => [Matrix.fromArray([x[0]]), Matrix.fromArray([x[1]])])
     }
-    static prepareTrainingImages(training_set) {
+    static prepareTrainingImagesBW(training_set) {
         //convert training data to matrix pairs
         return training_set.map(x => [
-            x[0].map(x => Matrix.multiply(x,1/255)), Matrix.fromArray([x[1]])
+            [Matrix.fromArray(x[0])], Matrix.fromArray(x[1])
         ])
     }
     static prepareDatasets(training_set, len=1) {
@@ -64,7 +64,7 @@ class Neural_Network {
         })
     }
     static load(type,name=type){
-        return eval(type).from_string(fs.readFileSync(name+".json").toString())
+        return eval(type).from_string(eval("(" + fs.readFileSync(name+".json").toString() + ")"))
     }
     save(name = this.type){
         fs.writeFileSync(name+".json",JSON.stringify(this))

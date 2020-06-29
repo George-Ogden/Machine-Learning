@@ -2,7 +2,7 @@ const Matrix = require("./Matrix.js");
 const Neural_Network = require("./ANN.js");
 class Max_Pooling extends Neural_Network {
     constructor(x, y, dx, dy, colours = 3) {
-        super(Max_Pooling, "identity", 1)
+        super("Max_Pooling", "identity", 1)
         this.x = x;
         this.y = y;
         this.dx = dx
@@ -56,13 +56,12 @@ class Max_Pooling extends Neural_Network {
     }
     static from_string(dict) {
         //create new network
-        let network = new Max_Pooling(this.x, this.y, this.dx, this.dy)
-        return network
+        return new Max_Pooling(dict.x, dict.y, dict.dx, dict.dy,dict.colours)
     }
 }
 class Average_Pooling extends Neural_Network {
     constructor(x, y, dx, dy, colours = 3) {
-        super(Average_Pooling, "identity", 1)
+        super("Average_Pooling", "identity", 1)
         //define sizes
         this.x = x;
         this.y = y;
@@ -119,8 +118,7 @@ class Average_Pooling extends Neural_Network {
     }
     static from_string(dict) {
         //create new network
-        let network = new Average_Pooling(this.x, this.y, this.dx, this.dy)
-        return network
+        return new Average_Pooling(dict.x, dict.y, dict.dx, dict.dy,dict.colours)
     }
 }
 module.exports = {

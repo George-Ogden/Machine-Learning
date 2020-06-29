@@ -18,7 +18,7 @@ class Generative_Adverserial_Network extends Neural_Network {
     );
   }
   static positive = Matrix.fromArray([[1]]);
-  static negative = Matrix.fromArray([[0]]);
+  static negative = Matrix.fromArray([[-1]]);
   train_discriminator(data_set, size=data_set.length, n=1) { 
     var training_set = [...data_set.map((data) => [
         this.generator.forward_propagate(data),
@@ -79,13 +79,13 @@ const data = Generative_Adverserial_Network.prepareTraining(data_set)
 
 var GAN = Generative_Adverserial_Network.load("Generative_Adverserial_Network","dinosaurs")//new Generative_Adverserial_Network(new Fully_Connected_Network(13, 2, 7, 1, "tanh", 0.5),new Fully_Connected_Network(13, 1, 13, 13, "softplus", 0.5));
 
-for (let x = 234780;; x++){
-  GAN.train(data,10,100,200,1,3)
+while (true) {
+  GAN.train(data,10,100,200,2,1)
   GAN.save("dinosaurs")
-  console.log(10*(x+1))
+  console.log(".")
 }
 
-/*
+
 let t = 1
 for (let i = 0; i < 10; i++){
   var x = [27]
@@ -97,5 +97,5 @@ for (let i = 0; i < 10; i++){
   console.log(textify(x),y)
 }
 console.log(t)
-*/
+
 //module.exports = Generative_Adverserial_Network

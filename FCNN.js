@@ -2,7 +2,7 @@ const Matrix = require("./Matrix.js");
 const Neural_Network = require("./ANN.js")
 const Activation_Function = require("./Activation_Functions.js")
 class Fully_Connected_Network extends Neural_Network {
-    constructor(        inputs,        hidden_layers,        layer_thickness,        outputs,        activation_function,        learning_rate = 0.1    ) {
+    constructor(        inputs,        hidden_layers,        layer_thickness,        outputs,        activation_function,        learning_rate = 0.5    ) {
         //superclass constructor
         super("Fully_Connected_Network", activation_function, learning_rate)
         //initialise variables
@@ -63,17 +63,16 @@ class Fully_Connected_Network extends Neural_Network {
             //calculate the gradients
             let gradient = Matrix.map(
                 this.process[j + 1],
-                this.activation_function.derivative,
+                this.activation_function.derivative
             );
-            gradient.multiply(1/this.weights[j].abs_sum())
             gradient.multiply(error);
             //change the error
             error.dot(Matrix.transpose(this.weights[j]));
             //add the deltas
-            this.bias_deltas[j].add(Matrix.multiply(gradient,1/this.biases[j].abs_sum()));
+            this.bias_deltas[j].add(gradient);
             this.weight_deltas[j].add(
-                Matrix.dot(Matrix.transpose(this.process[j]), Matrix.multiply(gradient,1/this.weights[j].abs_sum()))
-            );
+                Matrix.dot(Matrix.transpose(this.process[j]),gradient)
+            )
         }
         return error
 
@@ -95,10 +94,11 @@ class Fully_Connected_Network extends Neural_Network {
         for (let i = r; i < batches * batch_size + r; i++){
             for (let j = 0; j < batch_size; j++) {
                 //calculate error
-                let error = Matrix.subtract(training_set[i%batch_size][1], this.forward_propagate(training_set[i%batch_size][0]));
+                let error = Matrix.subtract(training_set[(i+j)%batch_size][1], this.forward_propagate(training_set[(i+j)%batch_size][0]));
                 //loop backwards through rows
                 this.backward_propagate(error)
             }
+            //update
             this.update()
         }
     }
@@ -121,36 +121,3 @@ class Fully_Connected_Network extends Neural_Network {
     }
 }
 module.exports = Fully_Connected_Network
-/*
-
-let network = new Fully_Connected_Network(2, 1, 3, 1, "sigmoid",0.5);
-let training_data = [
-    [
-        [0, 0],
-        [0]
-    ],
-    [
-        [0, 1],
-        [1]
-    ],
-    [
-        [1, 0],
-        [1]
-    ],
-    [
-        [1, 1],
-        [0]
-    ],
-]
-const training_set = Fully_Connected_Network.prepareTraining(training_data);
-for (let i = 0; i < training_set.length; i++) {
-    console.log(network.forward_propagate(training_set[i][0]).data[0][0]);
-}
-function run(n=1000){
-    network.train(training_set,n)
-}
-function finish(){
-    for (let i = 0; i < training_set.length; i++) {
-        console.log(network.forward_propagate(training_set[i][0]).data[0][0]);
-    }
-}*/

@@ -28,14 +28,6 @@ class Matrix {
         //return new matrix
         return new_matrix;
     }
-  static fromArray(array) {
-    //crete a new matrix
-    let new_matrix = new Matrix(array.length, array[0].length);
-    //copy data
-    new_matrix.data = array;
-    //return new matrix
-    return new_matrix;
-  }
 
   set(matrix) {
     matrix = Matrix.fromArray(matrix.data);
