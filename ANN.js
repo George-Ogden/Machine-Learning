@@ -10,7 +10,10 @@ class Neural_Network {
         //add learning rate
         this.learning_rate = learning_rate;
     }
-    show() {}
+    show() {
+        //default value
+        console.log(this)
+    }
     forward_propagate(inputs) {}
     backward_propagate(error) {}
     update() {}
@@ -52,7 +55,7 @@ class Neural_Network {
     static prepareTrainingImagesBW(training_set) {
         //convert training data to matrix pairs
         return training_set.map(x => [
-            [Matrix.fromArray(x[0])], Matrix.fromArray(x[1])
+            [Matrix.multiply(Matrix.fromArray(x[0]),255)], Matrix.fromArray(x[1])
         ])
     }
     static prepareDatasets(training_set, len=1) {

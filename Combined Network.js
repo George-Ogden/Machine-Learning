@@ -1,7 +1,6 @@
 const Neural_Network = require("./ANN.js")
 const Matrix = require("./Matrix.js")
 const Convoluting = require("./Convolutional Layers.js")
-var e = 0
 class Combined_Network extends Neural_Network {
     constructor(networks,type="Combined_Neural_Network") {
         super(type)
@@ -28,13 +27,15 @@ class Combined_Network extends Neural_Network {
         //loop through layers and backpropagate error
         for (let i = this.length - 1; i >= 0; i--) {
             error = this.networks[i].backward_propagate(error)
-            console.log(error[0])
+            //console.log(error[0])
         }
     }
     update(){
         //loop through layers and update them
         for (let i = 0; i < this.length; i++) {
-            this.networks[i].update()
+            if (i > 4){
+                this.networks[i].update()
+            }
         }
     }
     train(training_set, batches = 1, batch_size = training_set.length){
@@ -56,19 +57,9 @@ class Combined_Network extends Neural_Network {
     copy() {
         return Combined_Network.from_string(eval("("+JSON.stringify(this.networks))+ ")")
     }
-    cost(test_data) {
-        //starte with no cost
-        let value = 0;
-        for (let i = 0; i < test_data.length; i++) {
-            //find errors squared
-            value += Matrix.subtract(test_data[i][1], this.forward_propagate(test_data[i][0])).rss();
-        }
-        //return average
-        return value / test_data.length;
-    }
     show() {
         for (let i = 0; i < this.length; i++) {
-            console.log(this.networks[i])
+            this.networks[i].show()
         }
     }
 }

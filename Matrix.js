@@ -165,6 +165,20 @@ class Matrix {
     this.set(Matrix.dot(this, matrix));
   }
 
+  clip(n){
+    //limit the size of a matrix
+    this.map(x => x > n ? n : x < -n ? -n : x)
+  }
+
+  static clip(matrix,n){
+    //initialise new matrix
+    let new_matrix = matrix.copy()
+    //clip
+    new_matrix.clip(n)
+    //return new matrix
+    return new_matrix;
+  }
+
   rss() {
     //return each element squared
     return this.data.reduce((x, y) => x + y.reduce((x, y) => x + y * y, 0), 0);
