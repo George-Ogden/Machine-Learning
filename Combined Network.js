@@ -27,15 +27,12 @@ class Combined_Network extends Neural_Network {
         //loop through layers and backpropagate error
         for (let i = this.length - 1; i >= 0; i--) {
             error = this.networks[i].backward_propagate(error)
-            //console.log(error[0])
         }
     }
     update(){
         //loop through layers and update them
         for (let i = 0; i < this.length; i++) {
-            if (i > 4){
-                this.networks[i].update()
-            }
+            this.networks[i].update()
         }
     }
     train(training_set, batches = 1, batch_size = training_set.length){
@@ -44,7 +41,7 @@ class Combined_Network extends Neural_Network {
         for (let i = r; i < batches * batch_size + r; i++){
             for (let j = 0; j < batch_size; j++) {
                 //backward propagate error
-                this.backward_propagate( Matrix.subtract(training_set[(i+j)%batch_size][1], this.forward_propagate(training_set[(i+j)%batch_size][0])))
+                this.backward_propagate( Matrix.subtract(training_set[(i+j)%training_set.length][1], this.forward_propagate(training_set[(i+j)%training_set.length][0])))
             }
             //update
             this.update()

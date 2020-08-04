@@ -18,27 +18,45 @@ class Neural_Network {
     backward_propagate(error) {}
     update() {}
     
-    cost(test_data, n=0) {
-        //starte with no cost
-        let value = 0;
-        if (n == 0){
-            for (let i = 0; i < test_data.length; i++) {
-                //find errors squared
-                value += Matrix.subtract(test_data[i][1], this.forward_propagate(test_data[i][0])).rss();
-            }
-            //return average
-            this.value = value / test_data.length
-            return value / test_data.length;
-        } else {
-            for (let i = 0; i < n; i++) {
-                let r = Math.floor(Math.random() * test_data.length);
-                //find errors squared
-                value += Matrix.subtract(test_data[r][1], this.forward_propagate(test_data[r][0])).rss();
-            }
-            this.value  = value/n
-            //return average
-            return value / n;
+    cost(test_data, n=test_data.length) {
+        //start with no cost
+        let loss = 0;
+        let r = Math.floor(Math.random() * test_data.length);
+        for (let i = r; i < n + r; i++) {
+            //find errors squared
+            loss += Matrix.subtract(test_data[i%test_data.length][1], this.forward_propagate(test_data[i%test_data.length][0])).rss();
         }
+        this.loss = loss/n
+        //return average
+        return loss / n;
+    }
+    cross_entropy(test_data, n=test_data.length) {
+        //start with no loss
+        let loss = 0;
+        let r = Math.floor(Math.random() * test_data.length);
+        for (let i = r; i < n + r; i++) {
+            //find errors squared
+            loss -= Math.log(Matrix.multiply(test_data[i%test_data.length][1], this.adjust(this.forward_propagate(test_data[i%test_data.length][0]))).sum())
+        }
+        this.loss = loss/n
+        //return loss
+        return loss/n;
+    }
+    adjust(output = this.process[this.process.length-1]){
+        output.map(Math.exp);
+        return Matrix.multiply(output,1/output.sum())
+    }
+    accuracy(test_data, n=test_data.length) {
+        //start with no cost
+        let value = 0;
+        let r = Math.floor(Math.random() * test_data.length);
+        for (let i = r; i < n + r; i++) {
+            //find accuracy
+            value += Matrix.subtract(test_data[i%test_data.length][1].max_plot(),this.forward_propagate(test_data[i%test_data.length][0]).max_plot()).rss() == 0;
+        }
+        this.value  = value/n
+        //return average
+        return value / n * 100;
     }
     copy() {
         //create network from string of self
@@ -55,7 +73,7 @@ class Neural_Network {
     static prepareTrainingImagesBW(training_set) {
         //convert training data to matrix pairs
         return training_set.map(x => [
-            [Matrix.multiply(Matrix.fromArray(x[0]),255)], Matrix.fromArray(x[1])
+            [Matrix.multiply(Matrix.fromArray(x[0]),1/255)], Matrix.fromArray([x[1]])
         ])
     }
     static prepareDatasets(training_set, len=1) {

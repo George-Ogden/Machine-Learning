@@ -2,7 +2,7 @@ const Matrix = require("./Matrix.js");
 const Neural_Network = require("./ANN.js")
 const Activation_Function = require("./Activation_Functions.js")
 class Fully_Connected_Network extends Neural_Network {
-    constructor(        inputs,        hidden_layers,        layer_thickness,        outputs,        activation_function,        learning_rate = 0.1    ) {
+    constructor(input,hidden_layers,layer_thickness,outputs,activation_function,learning_rate = 0.1) {
         //superclass constructor
         super("Fully_Connected_Network", activation_function, learning_rate)
         //initialise variables
@@ -22,8 +22,8 @@ class Fully_Connected_Network extends Neural_Network {
             this.bias_deltas.push(Matrix.blank(1, this.biases[i].cols))
         }
         //alter significant matrices
-        this.weights[0] = Matrix.multiply(new Matrix(inputs, this.width),Math.sqrt(2/this.width));
-        this.weight_deltas[0] = Matrix.blank(inputs, this.width);
+        this.weights[0] = Matrix.multiply(new Matrix(input, this.width),Math.sqrt(2/this.width));
+        this.weight_deltas[0] = Matrix.blank(input, this.width);
         this.weights[this.length - 1] = Matrix.multiply(new Matrix(this.width, outputs),Math.sqrt(2/this.width));
         this.weight_deltas[this.length - 1] = Matrix.blank(this.width, outputs);
         this.biases[this.length - 1] =Matrix.multiply(new Matrix(1, outputs),Math.sqrt(4/outputs));
@@ -40,8 +40,8 @@ class Fully_Connected_Network extends Neural_Network {
             this.biases[i].show();
         }
     }
-    forward_propagate(inputs) {
-        let output = inputs.copy();
+    forward_propagate(input) {
+        let output = input.copy();
         this.process = [output.copy()];
         //set first output as input
         for (let i = 0; i < this.length; i++) {
@@ -64,7 +64,6 @@ class Fully_Connected_Network extends Neural_Network {
                 this.process[j + 1],
                 this.activation_function.derivative
             );
-            //console.log(error)
             gradient.multiply(error);
             //change the error
             error.dot(Matrix.transpose(this.weights[j]));
@@ -80,8 +79,8 @@ class Fully_Connected_Network extends Neural_Network {
     update(){
         for (let i = 0; i < this.length; i++) {
             //add deltas to weights and biases
-            this.weights[i].add(Matrix.clip(Matrix.multiply(this.weight_deltas[i],this.learning_rate),10))
-            this.biases[i].add(Matrix.clip(Matrix.multiply(this.bias_deltas[i],this.learning_rate),10));
+            this.weights[i].add(Matrix.clip(Matrix.multiply(this.weight_deltas[i],this.learning_rate),0.25,this.weights[i]))
+            this.biases[i].add(Matrix.clip(Matrix.multiply(this.bias_deltas[i],this.learning_rate),0.25,this.biases[i]));
             //reset deltas
             this.weight_deltas[i].reset()
             this.bias_deltas[i].reset()
@@ -93,13 +92,24 @@ class Fully_Connected_Network extends Neural_Network {
         for (let i = r; i < batches * batch_size + r; i++){
             for (let j = 0; j < batch_size; j++) {
                 //calculate error
-                let error = Matrix.subtract(training_set[(i+j)%batch_size][1], this.forward_propagate(training_set[(i+j)%batch_size][0]));
+                let error = Matrix.subtract(training_set[(i+j)%training_set.length][1], this.forward_propagate(training_set[(i+j)%training_set.length][0]));
                 //loop backwards through rows
                 this.backward_propagate(error)
             }
             //update
             this.update()
         }
+    }
+    export(){
+        //copy
+        let copy = this.copy()
+        //remove attributes
+        delete copy.process
+        delete copy.bias_deltas
+        delete copy.weight_deltas
+        delete copy.activation_function
+        //convert to JSON
+        return JSON.stringify(copy)
     }
     static from_string(dict) {
         //create new network

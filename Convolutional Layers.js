@@ -87,9 +87,8 @@ class Convoluting extends Neural_Network {
     update(){
         for (let i = 0; i < this.colours; i++) {
             for (let j = 0; j < this.length; j++) {
-                console.log(Matrix.clip(Matrix.multiply(this.kernel_deltas[i][j],this.learning_rate),100))
                 //add deltas to kernels
-                this.kernels[i][j].add(Matrix.clip(Matrix.multiply(this.kernel_deltas[i][j],this.learning_rate),1))
+                this.kernels[i][j].add(Matrix.clip(Matrix.multiply(this.kernel_deltas[i][j],this.learning_rate),0.25,this.kernels[i][j]))
                 //reset deltas
                 this.kernel_deltas[i][j].reset()
             }
