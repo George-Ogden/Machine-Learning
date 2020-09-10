@@ -20,7 +20,7 @@ const SoftPlus = new Activation_Function(x => Math.log(1 + Math.exp(x)), x => 1 
 //swish
 const swish = new Activation_Function(x => x / (1 + Math.exp(-x)), x => x == 0 ? 0.5 : x + x * (1 - x) / (lambert_W(x * Math.exp(-x)) + x));
 //softplus
-const softplus = new Activation_Function(x =>Math.log(1+Math.exp(x)),x => 1-Math.exp(-x));
+const softplus = new Activation_Function(x => x > 100 ? x : Math.log(1+Math.exp(x)),x => 1-Math.exp(-x));
 
 activation_functions = {
     "sigmoid": sigmoid,

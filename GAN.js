@@ -42,7 +42,7 @@ class Generative_Adverserial_Network extends Neural_Network {
       discriminator_copy.backward_propagate(
         Matrix.subtract(
           Generative_Adverserial_Network.positive,
-          discriminator_copy.forward_propagate(Matrix.map(fake,x => Math.floor(x)))
+          discriminator_copy.forward_propagate(fake)
         )
       )
     );
@@ -77,15 +77,30 @@ class Generative_Adverserial_Network extends Neural_Network {
 }
 const data = Generative_Adverserial_Network.prepareTraining(data_set)
 
-var GAN = Generative_Adverserial_Network.load("Generative_Adverserial_Network","dinosaurs")//new Generative_Adverserial_Network(new Fully_Connected_Network(13, 2, 7, 1, "tanh", 0.5),new Fully_Connected_Network(13, 1, 13, 13, "softplus", 0.5));
+var GAN = Generative_Adverserial_Network.load("Generative_Adverserial_Network","dinosaurs")/*GAN = new Generative_Adverserial_Network(new Fully_Connected_Network(13, 2, 7, 1, "tanh", 0.1),new Fully_Connected_Network(13, 2, 13, 13, "softplus", 0.1));
+GAN.generator.weights.forEach(x => x.map(() => 2 * Math.random() - 1))
+GAN.discriminator.weights.forEach(x => x.map(() => 2 * Math.random() - 1))
+GAN.generator.biases.forEach(x => x.map(() => 2 * Math.random() - 1))
+GAN.discriminator.biases.forEach(x => x.map(() => 2 * Math.random() - 1))*/
 
+//console.log(GAN.generate(data))
 while (true) {
-  GAN.train(data,10,100,200,2,1)
+GAN.train(data,10,100,200,2,1)
   GAN.save("dinosaurs")
-  console.log(".")
+  var x = [27]
+  var t = 0
+  var y
+  while (Math.max(...x) >= 26 && t++ < 100){
+    [x,y] = GAN.generate(data)
+  }
+  if (t < 100){
+    console.log(textify(x),y)
+  } else {
+    console.log(".")
+  }
 }
 
-
+/*
 let t = 1
 for (let i = 0; i < 10; i++){
   var x = [27]
@@ -97,5 +112,5 @@ for (let i = 0; i < 10; i++){
   console.log(textify(x),y)
 }
 console.log(t)
-
+*/
 //module.exports = Generative_Adverserial_Network

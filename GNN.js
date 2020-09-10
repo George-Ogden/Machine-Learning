@@ -1,14 +1,17 @@
-class Genetic_Neural_Network extends Fully_Connected_Network {
-    constructor(inputs, hidden_layers, layer_thickness, outputs, activation_function) {
-        //create FCNN
-        super(inputs, hidden_layers, layer_thickness, outputs, activation_function)
-        this.type = Genetic_Neural_Network
+const fs = require("fs")
+const activation_functions = require("./Activation_Functions.js").activation_functions;
+const Matrix = require("./Matrix.js");
+class Genetic_Neural_Network {
+    constructor(type,activation_function="tanh") {
+        this.type = type
+        this.activation_function_name = activation_function;
+        this.activation_function = activation_functions[activation_function];
     }
     replicate() {
         //copy
         return this.copy()
     }
-    mutate(rate = 0.1) {
+    mutate(rate = 0.05) {
         //define result
         let result = this.copy()
         //loop through all weights and biases
@@ -33,21 +36,25 @@ class Genetic_Neural_Network extends Fully_Connected_Network {
         //return results
         return network1.mutate(0.01)
     }
-    static from_string(dict) {
-        //create new network
-        let network = new Genetic_Neural_Network(
-            dict.weights[0].rows,
-            dict.length - 2,
-            dict.weights[0].cols,
-            dict.weights[dict.weights.length - 1].cols,
-            dict.activation_function_name,
-            dict.learning_rate
-        );
-        //set variables
-        for (let i = 0; i < network.length; i++) {
-            network.weights[i] = network.weights[i].copy();
-            network.biases[i] = network.biases[i].copy();
-        }
-        return network;
+    static load(type,name=type){
+        return eval(type).from_string(eval("(" + fs.readFileSync(name+".json").toString() + ")"))
+    }
+    save(name = this.type){
+        fs.writeFileSync(name+".json",JSON.stringify(this))
+    }
+    copy() {
+        //create network from string of self
+        return eval(this.type).from_string(eval("(" + JSON.stringify(this) + ")"));
+    }
+    show() {
+        //default value
+        console.log(this)
+    }
+    forward_propagate(input) {}
+    export(){
+        let copy = eval("("+JSON.stringify(this)+")")
+        delete copy.process
+        return JSON.stringify(copy)
     }
 }
+module.exports = Genetic_Neural_Network

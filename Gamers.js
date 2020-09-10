@@ -1,13 +1,19 @@
+const Matrix = require("./Matrix.js");
+const fs = require("fs")
+const Gamer = require("./Gamer.js");
+const Noughts_and_Crosses = require("./Noughts_and_Crosses.js");
+const Population = require("./Population.js");
+const Genetic_Fully_Connected_Neural_Network = require("./GFCNN.js");
+const Genetic_Combined_Network = require("./Genetic Combined Network.js");
+const Umpire = require("./Umpire.js");
 class Gamers extends Population {
-    constructor(number, board_size, hidden_layers, layer_thickness,output = board_size*board_size) {
+    constructor(number, umpire, hidden_layers, layer_thickness) {
         //create networks with parameters
-        super(number, board_size * board_size, hidden_layers, layer_thickness, output, "tanh")
+        super(number, umpire.size * umpire.size, umpire, hidden_layers, layer_thickness, "tanh")
         //initialise score of 0
         this.apply(gamer => gamer.score = 0);
-        //redefine cost function
-        this.apply(gamer => gamer.cost = () => gamer.score == 0 ? number : 1 / gamer.score);
     }
-    seed(umpire, elitists=1) {
+    seed(elitists=1) {
         //reset scores
         this.apply(gamer => gamer.score = 0);
         this.apply(gamer => gamer.cost = () => gamer.score == 0 ? number : 1 / gamer.score);
@@ -20,18 +26,16 @@ class Gamers extends Population {
                 for (let j = Math.floor(k*this.number/elitists); j < Math.floor((k+1)*this.number/elitists); j++) {
                     if (i != j) {
                         //umpire handles game
-                        let result = umpire.play(this.population[i], this.population[j])
-                        const table1 = {"0":2,"1":3,"-1":0}
-                        const table2 = {"0":2,"1":0,"-1":3}
+                        let result = this.umpire.play(new Gamer(this.population[i], this.umpire,1), new Gamer(this.population[j],this.umpire,1))
                         //update scores
-                        this.population[i].score += table1[result]
-                        this.population[j].score += table2[result]
+                        this.population[i].score += result
+                        this.population[j].score -= result
                     }
                 }
             }
         }
     }
-    order(blank=null, elitists=1){
+    order(elitists=1){
         //declare blank generation
         let next_generation = []
         for (let i = 0; i < elitists; i++){
@@ -42,20 +46,35 @@ class Gamers extends Population {
         //return details
         return [this.apply(x => Math.pow(x.score,2)), next_generation]
     }
-    reproduce(umpire, n=1, elitists=1){
-        let date = new Date()
+    reproduce(n=1, elitists=1){
         for (let i = 0; i < n; i++){
-            this.seed(umpire, elitists)
-            super.reproduce(null, 1, elitists)
+            this.seed(elitists)
+            super.reproduce(1, elitists,2)
         }
     }
     static from_string(generation,n=0) {
         //create new population
-        let gamers = new Gamers(generation.length, Math.sqrt(generation[0].inputs), generation[0].length, generation[0].width)
+        let gamers = new Gamers(generation.number,new Umpire(generation.umpire.size),1, 1)
         //fill in population
-        gamers.population = generation.map(gamer => Genetic_Neural_Network.from_string(gamer))
+        gamers.population = generation.population.map(gamer => Genetic_Combined_Network.from_string(gamer))
         gamers.generation = n;
 
         return gamers
     }
+    static load(name=type){
+        return Gamers.from_string(eval("(" + fs.readFileSync(name+".json").toString() + ")"))
+    }
+    save(name = this.type){
+        fs.writeFileSync(name+".json",JSON.stringify(this))
+    }
+      
+}
+const umpire = new Noughts_and_Crosses(7, 4);
+//let p = new Gamers(100,umpire,1,5)
+let p = Gamers.load("players")
+let x = 0
+while (true){
+    p.reproduce(5)
+    p.save("players")
+    console.log(x+=5)
 }

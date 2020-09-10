@@ -87,8 +87,14 @@ class Neural_Network {
     static load(type,name=type){
         return eval(type).from_string(eval("(" + fs.readFileSync(name+".json").toString() + ")"))
     }
+    export(){
+        let copy = this.copy()
+        delete copy.process
+        delete copy.activation_function
+        return JSON.stringify(copy)
+    }
     save(name = this.type){
-        fs.writeFileSync(name+".json",JSON.stringify(this))
+        fs.writeFileSync(name+".json",this.export())
     }
 }
 module.exports = Neural_Network

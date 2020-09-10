@@ -88,7 +88,7 @@ class Convoluting extends Neural_Network {
         for (let i = 0; i < this.colours; i++) {
             for (let j = 0; j < this.length; j++) {
                 //add deltas to kernels
-                this.kernels[i][j].add(Matrix.clip(Matrix.multiply(this.kernel_deltas[i][j],this.learning_rate),0.25,this.kernels[i][j]))
+                this.kernels[i][j].add(Matrix.multiply(this.kernel_deltas[i][j],this.learning_rate),0.25,this.kernels[i][j])
                 //reset deltas
                 this.kernel_deltas[i][j].reset()
             }
@@ -121,6 +121,14 @@ class Convoluting extends Neural_Network {
             }
         }
         return network;
+    }
+    export(){
+        let copy = this.copy()
+        delete copy.process
+        delete copy.activation_function
+        delete copy.process
+        delete copy.kernel_deltas
+        return JSON.stringify(copy)
     }
 }
 module.exports = Convoluting

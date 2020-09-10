@@ -1,6 +1,5 @@
 const Neural_Network = require("./ANN.js")
 const Matrix = require("./Matrix.js")
-const Convoluting = require("./Convolutional Layers.js")
 class Combined_Network extends Neural_Network {
     constructor(networks,type="Combined_Neural_Network") {
         super(type)
@@ -49,11 +48,20 @@ class Combined_Network extends Neural_Network {
     }
     static from_string(dict) {
         //create a copy of self
-        return new Combined_Network(dict.networks.map(x => eval(x.type).from_string(x)))
+        return new Combined_Network(dict.networks.map(x => eval(x.type).from_string(x)),dict.type)
     }
     copy() {
-        return Combined_Network.from_string(eval("("+JSON.stringify(this.networks))+ ")")
-    }
+        return Combined_Network.from_string({"networks":eval("("+JSON.stringify(this.networks)+ ")")})
+    }/*
+    export(){
+        let copy = eval("("+JSON.stringify(this)+ ")")
+        delete copy.process 
+        delete copy.activation_function
+        delete copy.activation_function_name
+        copy.networks.map( x => (console.log(x), x.export()+")"))
+        copy.networks.map( x => eval("("+x.export()+")"))
+        return JSON.stringify(copy)
+    }*/
     show() {
         for (let i = 0; i < this.length; i++) {
             this.networks[i].show()

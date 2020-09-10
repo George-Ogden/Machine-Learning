@@ -358,7 +358,10 @@ class Matrix {
         this.set(Matrix.insert(this, matrix, x, y));
     }
     equals(matrix) {
-        return this.data.reduce((a, row, i) => (a ? row.reduce((a, x, j) => Math.min(a, x == matrix.data[i][j]), 1) : 0), 1);
+        if (this.rows != matrix.rows || this.cols != matrix.cols){
+            return false
+        }
+        return this.data.reduce((a, row, i) => a ? row.reduce((b, x, j) => b ? x == matrix.data[i][j] : 0, 1) : 0, 1);
     }
 }
 module.exports = Matrix;

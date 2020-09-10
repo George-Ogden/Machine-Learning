@@ -58,6 +58,13 @@ class Max_Pooling extends Neural_Network {
         //create new network
         return new Max_Pooling(dict.x, dict.y, dict.dx, dict.dy,dict.colours)
     }
+    export(){
+        let copy = this.copy()
+        delete copy.process
+        delete copy.activation_function
+        delete copy.activation_function_name
+        return JSON.stringify(copy)
+    }
 }
 class Average_Pooling extends Neural_Network {
     constructor(x, y, dx, dy, colours = 3) {
@@ -119,6 +126,13 @@ class Average_Pooling extends Neural_Network {
     static from_string(dict) {
         //create new network
         return new Average_Pooling(dict.x, dict.y, dict.dx, dict.dy,dict.colours)
+    }
+    export(){
+        let copy = this.copy()
+        delete copy.process
+        delete copy.activation_function
+        delete copy.activation_function_name
+        return JSON.stringify(copy)
     }
 }
 module.exports = {
