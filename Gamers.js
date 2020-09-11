@@ -6,6 +6,7 @@ const Population = require("./Population.js");
 const Genetic_Fully_Connected_Neural_Network = require("./GFCNN.js");
 const Genetic_Combined_Network = require("./Genetic Combined Network.js");
 const Umpire = require("./Umpire.js");
+const Player = require("./Player.js");
 class Gamers extends Population {
     constructor(number, umpire, hidden_layers, layer_thickness) {
         //create networks with parameters
@@ -70,11 +71,12 @@ class Gamers extends Population {
       
 }
 const umpire = new Noughts_and_Crosses(7, 4);
-//let p = new Gamers(100,umpire,1,5)
-let p = Gamers.load("players")
+let p = new Gamers(50,umpire,1,5)
+//let p = Gamers.load("players")
+//umpire.spectate(pl,pl)
 let x = 0
 while (true){
-    p.reproduce(5)
+    p.reproduce(1)
     p.save("players")
-    console.log(x+=5)
+    console.log(++x)
 }

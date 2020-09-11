@@ -55,6 +55,26 @@ class Umpire {
         }
         return 0
     }
+    spectate(computer1, computer2, starter = Math.random() > 0.5 ? 1 : 0) {
+        this.board.reset()
+        //loop through number of points depending on who starts
+        for (let i = -starter; i < this.size * this.size - starter; i++) {
+            Matrix.map(this.board, x => x > 0 ? "X" : x < 0 ? "O" : " ").show();
+            //decide which player plays
+            if (i % 2 == 0) {
+                //add move to board
+                this.board.add(computer1.move(this.board,1))
+            } else {
+                //add move to board
+                this.board.add(computer1.move(this.board,-1))
+            }
+            let state = this.check_state()
+            if (state != 0) {
+                return state
+            }
+        }
+        return 0
+    }
     
     static shuffle(a){
         for (let i = a.length - 1; i > 0; i--) {
@@ -64,5 +84,4 @@ class Umpire {
         return a;
     }
 }
-
 module.exports = Umpire

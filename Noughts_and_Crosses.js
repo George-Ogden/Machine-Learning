@@ -108,28 +108,6 @@ class Noughts_and_Crosses extends Umpire {
         return 0;
     }
 }
-const connect4_mirroring = function(boards) {
-    for (let i in boards) {
-        for (let y = 0; boards[i] && y < boards[i].rows-1; y++) {
-            for (let x = 0;boards[i] && x < boards[i].cols; x++) {
-                //apply a function based on the matrix's data
-                if (boards[i].data[y][x] != 0 && boards[i].data[y+1][x] == 0){
-                    delete boards[i]
-                } 
-            }
-        }
-        
-        for (let j in boards) {
-            if (
-                boards[i] != undefined &&
-                boards[j] != undefined &&
-                boards[i].equals(Matrix.flip(boards[j], 1,0))
-            ) {
-                delete boards[Math.random() > 0.5 ? i : j];
-            }
-        }
-    }
-}
 // let umpire = new Noughts_and_Crosses(7, 4);
 // let player1 = new Player(umpire,5);
 // let player2 = new Player(umpire,5 );
