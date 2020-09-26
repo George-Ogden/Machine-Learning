@@ -1,7 +1,7 @@
-const Matrix = require("./Matrix.js");
-const Neural_Network = require("./ANN.js")
-const Fully_Connected_Network = require("./FCNN.js")
-const Activation_Function = require("./Activation_Functions.js")
+const Matrix = require("./Matrix");
+const Neural_Network = require("./ANN")
+const Fully_Connected_Network = require("./FCNN")
+const Activation_Function = require("./Activation_Functions")
 class Softmax extends Fully_Connected_Network {
     constructor(inputs,outputs,activation_function="sigmoid",learning_rate = 0.1) {
         //superclass constructor

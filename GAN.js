@@ -1,10 +1,10 @@
-const Matrix = require("./Matrix.js");
+const Matrix = require("./Matrix");
 const fs = require("fs")
-const Neural_Network = require("./ANN.js")
-const Fully_Connected_Network = require("./FCNN.js");
-const { numerify } = require("./dinosaurs.js");
-const data_set = require("./dinosaurs.js").data_set
-const textify = require("./dinosaurs.js").textify
+const Neural_Network = require("./ANN")
+const Fully_Connected_Network = require("./FCNN");
+const { numerify } = require("./dinosaurs");
+const data_set = require("./dinosaurs").data_set
+const textify = require("./dinosaurs").textify
 class Generative_Adverserial_Network extends Neural_Network {
   constructor(discriminator, generator) {
     super("Generative_Adverserial_Network")

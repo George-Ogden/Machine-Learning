@@ -1,5 +1,6 @@
-const Noughts_and_Crosses = require("./Noughts_and_Crosses.js");
-const Matrix = require("./Matrix.js");
+const Noughts_and_Crosses = require("./Noughts_and_Crosses");
+const Matrix = require("./Matrix");
+const Umpire = require("./Umpire");
 const fs = require("fs");
 class Player {
     constructor(umpire, max_depth = Infinity) {
@@ -8,7 +9,7 @@ class Player {
     }
     move(board, aim) {
         let best = this.check(Matrix.multiply(board,aim), 1, 1);
-        best = shuffle(Object.keys(best)).reduce((max, move) => (best[max] > best[move] ? max : move), 0);
+        best =/* Umpire.shuffle(Object.keys(best))*/Object.keys(best).reduce((max, move) => (best[max] > best[move] ? max : move), 0);
         let move = Matrix.blank(board.rows, board.cols);
         move.data[best % board.rows][Math.floor(best / board.rows)] = aim;
         return move;
@@ -82,23 +83,13 @@ class Player {
                         Matrix.transpose(boards[i]).equals(Matrix.flip(boards[j], 0)) ||
                         Matrix.transpose(boards[i]).equals(Matrix.flip(boards[j])))
                 ) {
-                    delete boards[Math.random() > 0.5 ? i : j];
+                    delete boards[i];
                 }
             }
         }
-    }
+    }/*
     evaluate() {
         return Math.random();
-    }
-}
-function shuffle(array) {
-    var j, x, i;
-    for (i = array.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        x = array[i];
-        array[i] = array[j];
-        array[j] = x;
-    }
-    return array;
+    }*/
 }
 module.exports = Player;

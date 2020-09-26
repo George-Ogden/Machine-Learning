@@ -1,5 +1,5 @@
-const Matrix = require("./Matrix.js");
-const activation_functions = require("./Activation_Functions.js").activation_functions;
+const Matrix = require("./Matrix");
+const activation_functions = require("./Activation_Functions").activation_functions;
 const fs = require("fs")
 class Neural_Network {
     constructor(type, activation_function="identity", learning_rate = 1) {

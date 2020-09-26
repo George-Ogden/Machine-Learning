@@ -1,12 +1,12 @@
-const Matrix = require("./Matrix.js");
+const Matrix = require("./Matrix");
 const fs = require("fs")
-const Gamer = require("./Gamer.js");
-const Noughts_and_Crosses = require("./Noughts_and_Crosses.js");
-const Population = require("./Population.js");
-const Genetic_Fully_Connected_Neural_Network = require("./GFCNN.js");
-const Genetic_Combined_Network = require("./Genetic Combined Network.js");
-const Umpire = require("./Umpire.js");
-const Player = require("./Player.js");
+const Gamer = require("./Gamer");
+const Noughts_and_Crosses = require("./Noughts_and_Crosses");
+const Population = require("./Population");
+const Genetic_Fully_Connected_Neural_Network = require("./GFCNN");
+const Umpire = require("./Umpire");
+const Player = require("./Player");
+const { exit } = require("process");
 class Gamers extends Population {
     constructor(number, umpire, hidden_layers, layer_thickness) {
         //create networks with parameters
@@ -27,7 +27,7 @@ class Gamers extends Population {
                 for (let j = Math.floor(k*this.number/elitists); j < Math.floor((k+1)*this.number/elitists); j++) {
                     if (i != j) {
                         //umpire handles game
-                        let result = this.umpire.play(new Gamer(this.population[i], this.umpire,1), new Gamer(this.population[j],this.umpire,1))
+                        let result = this.umpire.play(new Gamer(this.population[i], this.umpire,2), new Gamer(this.population[j],this.umpire,2))
                         //update scores
                         this.population[i].score += result
                         this.population[j].score -= result
@@ -55,9 +55,9 @@ class Gamers extends Population {
     }
     static from_string(generation,n=0) {
         //create new population
-        let gamers = new Gamers(generation.number,new Umpire(generation.umpire.size),1, 1)
+        let gamers = new Gamers(generation.number,new Noughts_and_Crosses(generation.umpire.size,generation.umpire.win),1, 1)
         //fill in population
-        gamers.population = generation.population.map(gamer => Genetic_Combined_Network.from_string(gamer))
+        gamers.population = generation.population.map(gamer => Genetic_Fully_Connected_Neural_Network.from_string(gamer))
         gamers.generation = n;
 
         return gamers
@@ -70,10 +70,15 @@ class Gamers extends Population {
     }
       
 }
+let p = Gamers.load("players")
 const umpire = new Noughts_and_Crosses(7, 4);
-let p = new Gamers(50,umpire,1,5)
-//let p = Gamers.load("players")
-//umpire.spectate(pl,pl)
+//let p = new Gamers(100,umpire,1,5)
+
+let p1 = new Gamer(p.population[0],umpire,5)
+let p2 = new Gamer(p.population[1],umpire,5)
+console.log(umpire.spectate(p1,p2))
+exit(0)
+
 let x = 0
 while (true){
     p.reproduce(1)

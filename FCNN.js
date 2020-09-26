@@ -1,6 +1,6 @@
-const Matrix = require("./Matrix.js");
-const Neural_Network = require("./ANN.js")
-const activation_functions = require("./Activation_Functions.js").activation_functions;
+const Matrix = require("./Matrix");
+const Neural_Network = require("./ANN")
+const activation_functions = require("./Activation_Functions").activation_functions;
 class Fully_Connected_Network extends Neural_Network {
     constructor(input,hidden_layers,layer_thickness,outputs,activation_function,learning_rate = 0.1) {
         //superclass constructor

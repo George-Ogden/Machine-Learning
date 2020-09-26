@@ -1,10 +1,10 @@
 const fs = require("fs");
-const Matrix = require("./Matrix.js");
-const Neural_Network = require("./ANN .js");
-const activation_functions = require("./Activation_Functions.js").activation_functions;
-const dinosarus = require("./dinosaurs.js").dinosaurs;
-const alphabet = require("./dinosaurs.js").alphabet;
-const betalpha = require("./dinosaurs.js").betalpha;
+const Matrix = require("./Matrix");
+const Neural_Network = require("./ANN ");
+const activation_functions = require("./Activation_Functions").activation_functions;
+const dinosarus = require("./dinosaurs").dinosaurs;
+const alphabet = require("./dinosaurs").alphabet;
+const betalpha = require("./dinosaurs").betalpha;
 class Recurrent_Neural_Network extends Neural_Network {
     constructor(input, memory, activation_function = "tanh", learning_rate = 0.1) {
         //superclass constructor

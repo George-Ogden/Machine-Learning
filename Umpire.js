@@ -1,5 +1,5 @@
-const Matrix = require("./Matrix.js");
-const Player = require("./Player.js");
+const Matrix = require("./Matrix");
+const Player = require("./Player");
 class Umpire {
     constructor(board_size) {
         //create a board
@@ -13,6 +13,7 @@ class Umpire {
     play(player1, player2) {
         //clear board
         this.board.reset()
+        this.board.data[this.size-1][(this.size-1)/2] = -1
         //loop through number of points
         for (let i = 0; i < this.size * this.size; i++) {
             //decide which player plays
@@ -57,6 +58,7 @@ class Umpire {
     }
     spectate(computer1, computer2, starter = Math.random() > 0.5 ? 1 : 0) {
         this.board.reset()
+        this.board.data[this.size-1][(this.size-1)/2] = starter*2-1
         //loop through number of points depending on who starts
         for (let i = -starter; i < this.size * this.size - starter; i++) {
             Matrix.map(this.board, x => x > 0 ? "X" : x < 0 ? "O" : " ").show();
@@ -66,13 +68,15 @@ class Umpire {
                 this.board.add(computer1.move(this.board,1))
             } else {
                 //add move to board
-                this.board.add(computer1.move(this.board,-1))
+                this.board.add(computer2.move(this.board,-1))
             }
             let state = this.check_state()
             if (state != 0) {
+                Matrix.map(this.board, x => x > 0 ? "X" : x < 0 ? "O" : " ").show();
                 return state
             }
         }
+        Matrix.map(this.board, x => x > 0 ? "X" : x < 0 ? "O" : " ").show();
         return 0
     }
     

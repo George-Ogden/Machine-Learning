@@ -1,6 +1,6 @@
-const Player = require("./Player.js");
-const Matrix = require("./Matrix.js");
-const Genetic_Fully_Connected_Neural_Network = require("./GFCNN.js");
+const Player = require("./Player");
+const Matrix = require("./Matrix");
+const Genetic_Fully_Connected_Neural_Network = require("./GFCNN");
 const connect4_mirroring = function(boards) {
     for (let i in boards) {
         for (let y = 0; boards[i] && y < boards[i].rows-1; y++) {
@@ -18,7 +18,7 @@ const connect4_mirroring = function(boards) {
                 boards[j] != undefined &&
                 boards[i].equals(Matrix.flip(boards[j], 1,0))
             ) {
-                delete boards[Math.random() > 0.5 ? i : j];
+                delete boards[i];
             }
         }
     }
@@ -44,13 +44,13 @@ class Gamer extends Player {
                         Matrix.transpose(boards[i]).equals(Matrix.flip(boards[j], 0)) ||
                         Matrix.transpose(boards[i]).equals(Matrix.flip(boards[j])))
                 ) {
-                    delete boards[Math.random() > 0.5 ? i : j];
+                    delete boards[i];
                 }
             }
         }
     }*/
     evaluate(board) {
-        return this.network.forward_propagate(board).data[0][0]
+        return this.network.forward_propagate(Matrix.flatten(board)).data[0][0]
     }
 }
 module.exports = Gamer;

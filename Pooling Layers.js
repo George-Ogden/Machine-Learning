@@ -1,5 +1,5 @@
-const Matrix = require("./Matrix.js");
-const Neural_Network = require("./ANN.js");
+const Matrix = require("./Matrix");
+const Neural_Network = require("./ANN");
 class Max_Pooling extends Neural_Network {
     constructor(x, y, dx, dy, colours = 3) {
         super("Max_Pooling", "identity", 1)

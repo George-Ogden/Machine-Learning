@@ -1,5 +1,5 @@
-const Matrix = require("./Matrix.js");
-const Neural_Network = require("./ANN.js");
+const Matrix = require("./Matrix");
+const Neural_Network = require("./ANN");
 class Convoluting extends Neural_Network {
     constructor(kernel_width, kernel_height, kernels, colours = 3, activation_function = "swish",learning_rate = 0.001) {
         super("Convoluting", activation_function, learning_rate)

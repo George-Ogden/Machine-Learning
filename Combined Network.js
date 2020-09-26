@@ -1,5 +1,5 @@
-const Neural_Network = require("./ANN.js")
-const Matrix = require("./Matrix.js")
+const Neural_Network = require("./ANN")
+const Matrix = require("./Matrix")
 class Combined_Network extends Neural_Network {
     constructor(networks,type="Combined_Neural_Network") {
         super(type)

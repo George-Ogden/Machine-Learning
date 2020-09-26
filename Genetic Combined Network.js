@@ -1,10 +1,10 @@
-const Neural_Network = require("./ANN.js")
-const Matrix = require("./Matrix.js")
-const Convoluting = require("./Convolutional Layers.js")
-const Genetic_Neural_Network = require("./GNN.js");
-const Genetic_Fully_Connected_Neural_Network = require("./GFCNN.js");
-const Genetic_Convolutional_Neural_Network = require("./GCNN.js");
-const Genetic_Flatten = require("./Genetic_Flatten.js");
+const Neural_Network = require("./ANN")
+const Matrix = require("./Matrix")
+const Convoluting = require("./Convolutional Layers")
+const Genetic_Neural_Network = require("./GNN");
+const Genetic_Fully_Connected_Neural_Network = require("./GFCNN");
+const Genetic_Convolutional_Neural_Network = require("./GCNN");
+const Genetic_Flatten = require("./Genetic_Flatten");
 class Genetic_Combined_Network extends Genetic_Neural_Network {
     constructor(networks,type="Genetic_Combined_Network") {
         super(type)

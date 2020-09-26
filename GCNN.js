@@ -1,6 +1,6 @@
-const Genetic_Neural_Network = require("./GNN.js")
-const Matrix = require("./Matrix.js");
-const Convoluting = require("./Convolutional Layers.js")
+const Genetic_Neural_Network = require("./GNN")
+const Matrix = require("./Matrix");
+const Convoluting = require("./Convolutional Layers")
 class Genetic_Convolutional_Neural_Network extends Genetic_Neural_Network {
     constructor(kernel_width, kernel_height, kernels, activation_function = "swish") {
         //create CNN

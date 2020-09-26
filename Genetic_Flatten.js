@@ -1,5 +1,5 @@
-const Matrix = require("./Matrix.js");
-const Genetic_Neural_Network = require("./GNN.js");
+const Matrix = require("./Matrix");
+const Genetic_Neural_Network = require("./GNN");
 class Genetic_Flatten extends Genetic_Neural_Network {
     constructor() {
         super("Genetic_Flatten", "identity")

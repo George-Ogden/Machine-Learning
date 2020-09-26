@@ -1,4 +1,4 @@
-const lambert_W = require("./lambertw.js").lambert_W0
+const lambert_W = require("./lambertw").lambert_W0
 class Activation_Function {
     constructor(func, derivative) {
         this.function = func;

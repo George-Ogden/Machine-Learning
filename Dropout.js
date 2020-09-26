@@ -1,5 +1,5 @@
-const Matrix = require("./Matrix.js");
-const Neural_Network = require("./ANN.js");
+const Matrix = require("./Matrix");
+const Neural_Network = require("./ANN");
 class Dropout extends Neural_Network {
     constructor(rate) {
         super("Dropout", "identity", 1)

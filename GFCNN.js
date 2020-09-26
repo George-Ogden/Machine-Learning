@@ -1,5 +1,5 @@
-const Genetic_Neural_Network = require("./GNN.js")
-const Matrix = require("./Matrix.js");
+const Genetic_Neural_Network = require("./GNN")
+const Matrix = require("./Matrix");
 class Genetic_Fully_Connected_Neural_Network extends Genetic_Neural_Network {
     constructor(inputs, hidden_layers, layer_thickness, outputs, activation_function="tanh") {
         //create FCNN
@@ -39,14 +39,13 @@ class Genetic_Fully_Connected_Neural_Network extends Genetic_Neural_Network {
         );
         //set variables
         for (let i = 0; i < network.length; i++) {
-            network.weights[i] = network.weights[i].copy();
-            network.biases[i] = network.biases[i].copy();
+            network.weights[i] = Matrix.fromArray(dict.weights[i].data);
+            network.biases[i] = Matrix.fromArray(dict.biases[i].data);
         }
         return network;
     }
     forward_propagate(input) {
         let output = input.copy();
-        this.process = [output.copy()];
         //set first output as input
         for (let i = 0; i < this.length; i++) {
             //multiply by weights

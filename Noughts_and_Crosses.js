@@ -1,5 +1,5 @@
-const Umpire = require("./Umpire.js");
-const Matrix = require("./Matrix.js");
+const Umpire = require("./Umpire");
+const Matrix = require("./Matrix");
 class Noughts_and_Crosses extends Umpire {
     constructor(size = 3, win = 3) {
         //create umpire
