@@ -269,7 +269,7 @@ class Matrix {
         this.set(Matrix.flatten(this));
     }
 
-    subsection(x, y, w, h) {
+    subsection(x, y, w=this.cols, h=this.rows) {
         //initialise new matrix
         let new_matrix = new Matrix(h, w);
         //loop through rows and columns
@@ -362,6 +362,19 @@ class Matrix {
             return false
         }
         return this.data.reduce((a, row, i) => a ? row.reduce((b, x, j) => b ? x == matrix.data[i][j] : 0, 1) : 0, 1);
+    }
+    static concat(a,b){
+        //join matrices together
+        let result = new Matrix(a.rows,a.cols+b.cols)
+        result.insert(a,0,0)
+        result.insert(b,a.cols,0)
+        return result
+    }
+    concat(matrix){
+        this.set(Matrix.concat(this,matrix))
+    }
+    static split(matrix,n){
+        return [matrix.subsection(0,0,n),matrix.subsection(n,0,matrix.cols-n)]
     }
 }
 module.exports = Matrix;

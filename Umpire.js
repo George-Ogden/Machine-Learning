@@ -39,21 +39,23 @@ class Umpire {
         this.board.reset()
         //loop through number of points depending on who starts
         for (let i = -starter; i < this.size * this.size - starter; i++) {
-            Matrix.map(Matrix.multiply(this.board, -1), x => x > 0 ? "X" : x < 0 ? "O" : " ").show();
+            Matrix.map(this.board, x => x > 0 ? "X" : x < 0 ? "O" : " ").show();
             //decide which player plays
             if (i % 2 == 0) {
                 //add move to board
-                this.board.add(computer.move())
+                this.board.add(computer.move(this.board,1))
             } else {
                 //display board
                 let move = prompt("Your move!")
-                this.board.data[0][move] = -1
+                this.board.data[Math.floor(move/this.size)][move%this.size] = -1
             }
             let state = this.check_state()
             if (state != 0) {
+                Matrix.map(this.board, x => x > 0 ? "X" : x < 0 ? "O" : " ").show();
                 return state
             }
         }
+        Matrix.map(this.board, x => x > 0 ? "X" : x < 0 ? "O" : " ").show();
         return 0
     }
     spectate(computer1, computer2, starter = Math.random() > 0.5 ? 1 : 0) {

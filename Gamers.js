@@ -27,7 +27,7 @@ class Gamers extends Population {
                 for (let j = Math.floor(k*this.number/elitists); j < Math.floor((k+1)*this.number/elitists); j++) {
                     if (i != j) {
                         //umpire handles game
-                        let result = this.umpire.play(new Gamer(this.population[i], this.umpire,2), new Gamer(this.population[j],this.umpire,2))
+                        let result = this.umpire.play(new Gamer(this.population[i], this.umpire,4), new Gamer(this.population[j],this.umpire,4))
                         //update scores
                         this.population[i].score += result
                         this.population[j].score -= result
@@ -55,7 +55,7 @@ class Gamers extends Population {
     }
     static from_string(generation,n=0) {
         //create new population
-        let gamers = new Gamers(generation.number,new Noughts_and_Crosses(generation.umpire.size,generation.umpire.win),1, 1)
+        let gamers = new Gamers(generation.number,new Noughts_and_Crosses(generation.umpire.size,generation.umpire.win),3, 3)
         //fill in population
         gamers.population = generation.population.map(gamer => Genetic_Fully_Connected_Neural_Network.from_string(gamer))
         gamers.generation = n;
@@ -70,15 +70,25 @@ class Gamers extends Population {
     }
       
 }
-let p = Gamers.load("players")
 const umpire = new Noughts_and_Crosses(7, 4);
-//let p = new Gamers(100,umpire,1,5)
-
-let p1 = new Gamer(p.population[0],umpire,5)
-let p2 = new Gamer(p.population[1],umpire,5)
+// let p = new Gamers(100,umpire,2,28)
+let p = Gamers.load("players")
+// // p.seed(1)
+// // let q = p.order(1)[0]
+// fs.writeFileSync("bests.json",JSON.stringify(p.population[14]))
+// // fs.writeFileSync("best.json", q[0])
+// // for (let i = 0; i < p.population.length; i++){
+// //     p.population[i].score = q
+// // }
+// fs.writeFileSync("beste.json", p.population.reduce((a,c)=>a.score > c.score ? a:p))
+// let p = new Gamers(40,umpire,1,5)
+/*
+let p1 = new Gamer(p.population[0],umpire,4)
+let p2 = new Gamer(p.population[1],umpire,4)
 console.log(umpire.spectate(p1,p2))
 exit(0)
-
+*/
+p.save("players")
 let x = 0
 while (true){
     p.reproduce(1)

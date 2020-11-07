@@ -50,7 +50,7 @@ class Gamer extends Player {
         }
     }*/
     evaluate(board) {
-        return this.network.forward_propagate(Matrix.flatten(board)).data[0][0]
+        return Math.random() < 0.01 ? Math.random() : this.network.forward_propagate(Matrix.flatten(board)).data[0][0]
     }
 }
 module.exports = Gamer;
