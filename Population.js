@@ -3,16 +3,21 @@ const Matrix = require("./Matrix");
 const Umpire = require("./Umpire");
 const Player = require("./Player");
 const Genetic_Fully_Connected_Neural_Network = require("./GFCNN");
-const Convoluting = require("./Convolutional Layers")
+const Convoluting = require("./Convolutional Layers");
+const Genetic_Convolutional_Neural_Network = require("./GCNN");
+const Genetic_Neural_Network = require("./GNN");
+Genetic_Combined_Neural_Network = require("./Genetic Combined Network")
+const Genetic_Flatten = require("./Genetic_Flatten")
 class Population {
     constructor(number, inputs, umpire, hidden_layers, layer_thickness, activation_function="tanh") {
+        inputs = Math.sqrt(inputs)
         this.population = [];
         this.generation = 0;
         this.number = number;
         this.umpire = umpire
         for (let i = 0; i < number; i++) {
             //add genetic neural network
-            this.population.push( new Genetic_Fully_Connected_Neural_Network(inputs,hidden_layers,layer_thickness,1, activation_function="tanh"))
+            this.population.push( new Genetic_Combined_Neural_Network([new Genetic_Convolutional_Neural_Network(umpire.win,umpire.win,1,"swish"),new Genetic_Flatten(),new Genetic_Fully_Connected_Neural_Network((inputs-umpire.win+1)*(inputs-umpire.win+1),hidden_layers,layer_thickness,1,activation_function)]))
         }
     }
     apply(func) {
@@ -78,7 +83,7 @@ class Population {
                     //add crossed-over child
                     let k = Math.floor(Math.random() * (parents.length - 1));
                     k >= i ? k++ : k;
-                    next_generation.push(Genetic_Fully_Connected_Neural_Network.crossover(parents[i % parents.length], parents[k], ranks[i % parents.length] / (ranks[i % parents.length] + ranks[k])).mutate(0.01));
+                    next_generation.push(Genetic_Combined_Neural_Network.crossover(parents[i % parents.length], parents[k], ranks[i % parents.length] / (ranks[i % parents.length] + ranks[k])).mutate(0.01));
                 } else {
                     //add copy
                     next_generation.push(parents[i % parents.length].replicate());
@@ -93,7 +98,7 @@ class Population {
         //create new population
         let population = new Population(generation.length, generation[0].inputs, generation[0].length, generation[0].width, generation.outputs, generation.activation_function_name);
         //fill in population
-        population.population = generation.map((x) => Genetic_Fully_Connected_Neural_Network.from_string(x));
+        population.population = generation.map((x) => Genetic_Combined_Neural_Network.from_string(x));
         population.generation = n;
         return population;
     }

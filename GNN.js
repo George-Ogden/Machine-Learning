@@ -11,7 +11,7 @@ class Genetic_Neural_Network {
         //copy
         return this.copy()
     }
-    mutate(rate = 0.05) {
+    mutate(rate = 0.1) {
         //define result
         let result = this.copy()
         //loop through all weights and biases
@@ -34,7 +34,7 @@ class Genetic_Neural_Network {
             network1.biases[i].set(network1.biases[i].map((x,y) => Math.random() < weight ?x : y,network2.biases[i]))
         }
         //return results
-        return network1.mutate(0.01)
+        return network1.mutate(0.02)
     }
     static load(type,name=type){
         return eval(type).from_string(eval("(" + fs.readFileSync(name+".json").toString() + ")"))

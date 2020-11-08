@@ -21,6 +21,7 @@ class Genetic_Combined_Network extends Genetic_Neural_Network {
         for (let i = 0; i < this.length; i++) {
             //pass output of previous network to input of next
             output = this.networks[i].forward_propagate(output)
+            // console.log(output)
         }
         return output
     }

@@ -1,5 +1,6 @@
 const Matrix = require("./Matrix");
 const Genetic_Neural_Network = require("./GNN");
+const fs = require("fs");
 class Genetic_Flatten extends Genetic_Neural_Network {
     constructor() {
         super("Genetic_Flatten", "identity")
@@ -11,7 +12,7 @@ class Genetic_Flatten extends Genetic_Neural_Network {
         for (let x = 0; x < matrix.cols; x++) {
             for (let y = 0; y < matrix.rows; y++) {
                 //insert into flat matrix
-                output.data[0][matrix.cols * matrix.rows + x * matrix.rows + y] = matrix.data[y][x]
+                output.data[0][ x * matrix.rows + y] = matrix.data[y][x]
             }
         }
         return output

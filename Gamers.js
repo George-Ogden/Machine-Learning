@@ -7,6 +7,7 @@ const Genetic_Fully_Connected_Neural_Network = require("./GFCNN");
 const Umpire = require("./Umpire");
 const Player = require("./Player");
 const { exit } = require("process");
+const Genetic_Combined_Neural_Network = require("./Genetic Combined Network");
 class Gamers extends Population {
     constructor(number, umpire, hidden_layers, layer_thickness) {
         //create networks with parameters
@@ -57,7 +58,7 @@ class Gamers extends Population {
         //create new population
         let gamers = new Gamers(generation.number,new Noughts_and_Crosses(generation.umpire.size,generation.umpire.win),3, 3)
         //fill in population
-        gamers.population = generation.population.map(gamer => Genetic_Fully_Connected_Neural_Network.from_string(gamer))
+        gamers.population = generation.population.map(gamer => Genetic_Combined_Neural_Network.from_string(gamer))
         gamers.generation = n;
 
         return gamers
@@ -71,7 +72,7 @@ class Gamers extends Population {
       
 }
 const umpire = new Noughts_and_Crosses(7, 4);
-// let p = new Gamers(100,umpire,2,28)
+// let p = new Gamers(100,umpire,1,9)
 let p = Gamers.load("players")
 // // p.seed(1)
 // // let q = p.order(1)[0]
