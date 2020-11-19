@@ -71,38 +71,17 @@ class Gamers extends Population {
     }
       
 }
-const umpire = new Noughts_and_Crosses(7, 4);
-//let p = new Gamers(100,umpire,1,9)
 let p = Gamers.load("players")
-// // p.seed(1)
-// // let q = p.order(1)[0]
-// fs.writeFileSync("bests.json",JSON.stringify(p.population[14]))
-// // fs.writeFileSync("best.json", q[0])
-// // for (let i = 0; i < p.population.length; i++){
-// //     p.population[i].score = q
-// // }
-// fs.writeFileSync("beste.json", p.population.reduce((a,c)=>a.score > c.score ? a:p))
-// let p = new Gamers(40,umpire,1,5)
-/*
-let p1 = new Gamer(p.population[0],umpire,4)
-let p2 = new Gamer(p.population[1],umpire,4)
+const umpire = new Noughts_and_Crosses(7, 4);
+console.log(JSON.stringify(p.population[0]))
+let p1 = new Gamer(p.population[0],umpire,5)
+let p2 = new Gamer(p.population[1],umpire,5)
 console.log(umpire.spectate(p1,p2))
 exit(0)
-*/
-p.save("players")
-let x = 0
+
+// let x = 0
 // while (true){
 //     p.reproduce(1)
 //     p.save("players")
 //     console.log(++x)
 // }
-
-p.reproduce(1)
-p.save("players")
-console.log(++x)
-p.reproduce(1)
-p.save("players")
-console.log(++x)
-p.reproduce(1)
-p.save("players")
-console.log(++x)
