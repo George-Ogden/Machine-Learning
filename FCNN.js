@@ -26,7 +26,7 @@ class Fully_Connected_Network extends Neural_Network {
         this.weight_deltas[0] = Matrix.blank(input, this.width);
         this.weights[this.length - 1] = Matrix.multiply(new Matrix(this.width, outputs),1/this.width*outputs);
         this.weight_deltas[this.length - 1] = Matrix.blank(this.width, outputs);
-        this.biases[this.length - 1] =Matrix.multiply(new Matrix(1, outputs),1/this.outputs);
+        this.biases[this.length - 1] =Matrix.multiply(new Matrix(1, outputs),1/outputs);
         this.bias_deltas[this.length - 1] = Matrix.blank(1, outputs);
     }
     copy() {
