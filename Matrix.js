@@ -1,3 +1,6 @@
+const {GPU} = require("gpu.js")
+const gpu = new GPU()
+
 class Matrix {
     constructor(rows = 0, columns = 0) {
         this.data = [];
@@ -74,9 +77,13 @@ class Matrix {
         return new_matrix;
     }
 
+    static gpu_map(func, mat1, mat2){
+        return gpu.createKernel(func,{output:{x: mat1.rows,y:mat1.cols}})(mat1.data,mat2.data)
+    }
+
     randomise() {
         //apply a random function from 0 to 1 to each element
-        this.map((x) => Math.random() * 2 - 1);
+        this.map(() => Math.random() * 2 - 1);
     }
 
     reset(n = 0) {
@@ -129,7 +136,7 @@ class Matrix {
             this.map((x) => x * n);
         } else {
             //Hadamard product
-            this.set(this.map((x, y) => x * y, n));
+            this.set(Matrix.fromArray(matmap(function(a, b) {return a[this.thread.x][this.thread.y]*b[this.thread.x][this.thread.y]}, this,n)));
         }
     }
 
@@ -140,24 +147,8 @@ class Matrix {
         return new_matrix;
     }
 
-    static dot(matrix1, matrix2) {
-        if ((matrix1.cols = matrix2.rows)) {
-            //initialise new matrix with columns of this and rows of that
-            let new_matrix = new Matrix(matrix1.rows, matrix2.cols);
-            //loop through rows and columns
-            for (let i = 0; i < new_matrix.rows; i++) {
-                for (let j = 0; j < new_matrix.cols; j++) {
-                    //initialise with no value
-                    let value = 0;
-                    for (let k = 0; k < matrix1.cols; k++) {
-                        //add on the sum of each row-column product
-                        value += matrix1.data[i][k] * matrix2.data[k][j];
-                    }
-                    new_matrix.data[i][j] = value;
-                }
-            }
-            return new_matrix;
-        }
+    static dot(mat1, mat2) {
+        gpu.createKernel(function(a,b,k){let sum = 0;for (let i = 0; i < k; i++){sum += a[this.thread.x][i]*b[i][this.thread.y]}return sum},{output:{x: mat1.rows,y:mat2.cols}})(mat1.data,mat2.data,mat1.cols)
     }
 
     dot(matrix) {
@@ -377,4 +368,5 @@ class Matrix {
         return [matrix.subsection(0,0,n),matrix.subsection(n,0,matrix.cols-n)]
     }
 }
+
 module.exports = Matrix;
