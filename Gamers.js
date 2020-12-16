@@ -91,11 +91,11 @@ exit(0)
 */
 p.save("players")
 let x = 0
-// while (true){
-//     p.reproduce(1)
-//     p.save("players")
-//     console.log(++x)
-// }
+while (true){
+    p.reproduce(1)
+    p.save("players")
+    console.log(++x)
+}
 
 p.reproduce(1)
 p.save("players")

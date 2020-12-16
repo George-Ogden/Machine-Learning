@@ -33,7 +33,7 @@ class Genetic_Convolutional_Neural_Network extends Genetic_Neural_Network {
         let network = new Genetic_Convolutional_Neural_Network(dict.width, dict.height, dict.length, dict.activation_function_name);
         //set variables
         for (let i = 0; i < network.length; i++) {
-            network.kernels[i] = network.kernels[i].copy();
+            network.kernels[i] = Matrix.fromArray(dict.kernels[i].data);
         }
         return network;
     }

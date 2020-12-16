@@ -1,6 +1,7 @@
 const Genetic_Neural_Network = require("./GNN")
 const Matrix = require("./Matrix");
-const fs = require("fs")
+const fs = require("fs");
+const { count } = require("console");
 class Genetic_Fully_Connected_Neural_Network extends Genetic_Neural_Network {
     constructor(inputs, hidden_layers, layer_thickness, outputs, activation_function="tanh") {
         //create FCNN
